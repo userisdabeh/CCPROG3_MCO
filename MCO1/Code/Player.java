@@ -1,33 +1,42 @@
+import java.util.ArrayList;
+
 public class Player {
     private String name;
-    private Piece lion;
-    private Piece rat;
+    private ArrayList<Piece> pieces;
 
     public Player(String name, Piece lion, Piece rat) {
         this.name = name;
-        this.lion = lion;
-        this.rat = rat;
-        this.lion.setPlayer(this); // Set the player for the Lion
-        this.rat.setPlayer(this);  // Set the player for the Rat
+        this.pieces = new ArrayList<Piece>();
+
+        setPiece(lion); // Set the player for the Lion
+        setPiece(rat);  // Set the player for the Rat
     }
 
     public String getName() {
         return name;
     }
 
-    public Piece getLion() {
-        return lion;
+//    public ArrayList<Piece> getPieces() {
+//        return pieces;
+//    }
+
+    public Piece getPiece(String pieceName) {
+        for (Piece piece : pieces) {
+            if (piece.getName().equalsIgnoreCase(pieceName)) {
+                return piece;
+            }
+        }
+        return null;
     }
 
-    public Piece getRat() {
-        return rat;
+    public void setPiece(Piece piece) {
+        if (piece != null) {
+            piece.setPlayer(this);
+            pieces.add(piece);
+        }
     }
 
     public void removePiece(Piece piece) {
-        if (piece == lion) {
-            lion = null; // Remove the Lion
-        } else if (piece == rat) {
-            rat = null; // Remove the Rat
-        }
+        pieces.remove(piece); // Remove the piece from the list of a player
     }
 }

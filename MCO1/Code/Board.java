@@ -1,9 +1,9 @@
 public class Board {
-    private Piece[][] grid;
+    private Piece[][] pieces;
     private char[][] terrain; // To represent lakes, traps, and bases
 
     public Board() {
-        grid = new Piece[9][7];
+        pieces = new Piece[9][7];
         terrain = new char[9][7];
         initializeBoard();
     }
@@ -36,10 +36,10 @@ public class Board {
         terrain[0][3] = '2';
 
         // Initialize the pieces
-        grid[8][6] = new Lion(8, 6); // player1
-        grid[6][6] = new Rat(6, 6); // player1
-        grid[0][0] = new Lion(0, 0); // player2
-        grid[2][0] = new Rat(2, 0); // player2
+        pieces[8][6] = new Lion(8, 6); // player1
+        pieces[6][6] = new Rat(6, 6); // player1
+        pieces[0][0] = new Lion(0, 0); // player2
+        pieces[2][0] = new Rat(2, 0); // player2
     }
 
     public char getTerrain(int x, int y) {
@@ -47,22 +47,23 @@ public class Board {
     }
 
     public Piece getPiece(int x, int y) {
-        return grid[x][y];
+        return pieces[x][y];
     }
 
     public void updatePiecePosition(Piece piece, int newX, int newY) {
         // Remove the piece from its current position
-        grid[piece.getX()][piece.getY()] = null;
+        pieces[piece.getX()][piece.getY()] = null;
         // Place the piece in the new position
-        grid[newX][newY] = piece;
+        pieces[newX][newY] = piece;
         piece.setPosition(newX, newY);
     }
 
     public void displayBoard() {
+        System.out.println();
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
-                if (grid[i][j] != null) {
-                    System.out.print(grid[i][j].getName().charAt(0) + " ");
+                if (pieces[i][j] != null) {
+                    System.out.print(pieces[i][j].getName().charAt(0) + " ");
                 } else {
                     System.out.print(terrain[i][j] + " ");
                 }
@@ -73,7 +74,7 @@ public class Board {
 
     public void removePiece(Piece piece) {
         // Remove the piece from the board
-        grid[piece.getX()][piece.getY()] = null;
+        pieces[piece.getX()][piece.getY()] = null;
 
         // Notify the player that the piece has been removed
         Player player = piece.getPlayer();

@@ -1,7 +1,7 @@
 public abstract class Piece {
     protected String name;
     protected int strength;
-    protected int x, y;
+    protected int x, y; // Coordinates of the piece in the grid
     protected Player player; // Reference to the player who owns the piece
 
     public Piece(String name, int strength, int x, int y) {
@@ -34,11 +34,11 @@ public abstract class Piece {
         return this.strength;
     }
 
-    public void setPlayer(Player player) {
-        this.player = player;
-    }
-
     public Player getPlayer() {
         return this.player;
+    }
+
+    public void setPlayer(Player player) {
+        this.player = player;
     }
 }
