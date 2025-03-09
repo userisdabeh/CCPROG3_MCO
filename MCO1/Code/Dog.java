@@ -1,6 +1,6 @@
 /**
  * Represents the Dog piece in the game.
- * The Dog has a strength of 6 and is a subclass of Piece.
+ * The Dog has a strength of 3 and is a subclass of Piece.
  * 
  * Currently, the Dog class is not implemented and always returns false.
  */
