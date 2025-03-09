@@ -5,39 +5,55 @@ public class Rat extends Piece {
 
     @Override
     public boolean move(int newX, int newY, Board board) {
-        // Check if the move is to an adjacent square
-        int dx = Math.abs(newX - x);
-        int dy = Math.abs(newY - y);
-        if ((dx == 1 && dy == 0) || (dx == 0 && dy == 1)) {
-            // Check if the target square is a lake
-            if (board.getTerrain(newX, newY) == '~') {
-                // Rat can swim on lakes
-                Piece targetPiece = board.getPiece(newX, newY);
-                if (targetPiece == null || (targetPiece.getName().equals("Rat") && this.strength >= targetPiece.getStrength() && !isSamePlayer(targetPiece))) {
-                    if (targetPiece != null) {
-                        board.removePiece(targetPiece); // Remove the opponent's piece
-                    }
-                    board.updatePiecePosition(this, newX, newY);
-                    return true;
+        // Adjacent move check
+        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) {
+            return false;
+        }
+
+        Piece target = board.getPiece(newX, newY);
+        boolean currentInWater = board.isLake(x, y);
+        boolean newInWater = board.isLake(newX, newY);
+
+        if (target != null) {
+            boolean targetInWater = board.isLake(target.getX(), target.getY());
+
+            // Check if same team
+            if (this.player == target.getPlayer()) {
+                return false;
+            }
+
+            // Capture elephant case
+            if (target.getName().equals("Elephant")) {
+                if (!currentInWater && !targetInWater) {
+                    board.removePiece(target);
+                } else {
+                    return false;
                 }
-            } else {
-                // Normal move on land
-                Piece targetPiece = board.getPiece(newX, newY);
-                if (targetPiece == null || (targetPiece.getName().equals("Elephant") && this.strength == 1) || (this.strength >= targetPiece.getStrength() && !isSamePlayer(targetPiece))) {
-                    if (targetPiece != null) {
-                        board.removePiece(targetPiece); // Remove the opponent's piece
-                    }
-                    board.updatePiecePosition(this, newX, newY);
-                    return true;
+            }
+            // Capture rat case
+            else if (target.getName().equals("Rat")) {
+                if (!(newInWater && targetInWater)) {
+                    return false;
                 }
+                if (this.strength < target.getStrength()) {
+                    return false;
+                }
+                board.removePiece(target);
+            }
+
+            // Handle normal capture
+            else {
+                if (this.strength < target.getStrength()) {
+                    return false;
+                }
+                if (newInWater) {
+                    return false;
+                }
+                board.removePiece(target);
             }
         }
 
-        return false;
-    }
-
-    private boolean isSamePlayer(Piece targetPiece) {
-        // Check if the target piece belongs to the same player
-        return this.getPlayer().equals(targetPiece.getPlayer());
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }

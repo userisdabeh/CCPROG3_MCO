@@ -1,6 +1,12 @@
 public class Lion extends Piece {
+    // Lake regions (rows 3-5, columns 1-2 and 4-5)
+    private static final int[][] LAKE_REGIONS = {
+            {3, 1}, {3, 2}, {4, 1}, {4, 2}, {5, 1}, {5, 2},  // Left lake
+            {3, 4}, {3, 5}, {4, 4}, {4, 5}, {5, 4}, {5, 5}   // Right lake
+    };
+
     public Lion(int x, int y) {
-        super("Lion", 6, x, y);
+        super("Lion", 7, x, y);
     }
 
     @Override
@@ -8,112 +14,84 @@ public class Lion extends Piece {
         int dx = newX - x;
         int dy = newY - y;
 
-        // Check if the move is within bounds
-        if (newX < 0 || newX >= 9 || newY < 0 || newY >= 7) {
+        // Check basic move validity
+        if (!board.isValidPosition(newX, newY) || (dx != 0 && dy != 0)) {
             return false;
         }
 
-        // Check if the move is horizontal or vertical
-        if (dx != 0 && dy != 0) {
-            return false; // Diagonal moves are not allowed
+        // Check if trying to jump over a lake
+        if (isAdjacentToLake() && isJumpingOverLake(dx, dy, board)) {
+            return handleLakeJump(dx, dy, board);
         }
 
-        // Check if the move is onto a lake (lions cannot move onto lakes)
-        if (board.getTerrain(newX, newY) == '~') {
-            return false;
-        }
+        // Regular move (1 square)
+        return handleRegularMove(newX, newY, board);
+    }
 
-        // Check if the move is a lake jump
-        if (Math.abs(dx) > 1 || Math.abs(dy) > 1) {
-            return canJumpLake(newX, newY, board);
-        }
-
-        // Normal move (one square)
-        Piece targetPiece = board.getPiece(newX, newY);
-        if (targetPiece == null) {
-            board.updatePiecePosition(this, newX, newY);
-            return true;
-        } else if (!isSamePlayer(targetPiece)) {
-            // Check if the Lion can capture the opponent's piece
-            if (this.strength >= targetPiece.getStrength()) {
-                board.removePiece(targetPiece); // Remove the opponent's piece
-                board.updatePiecePosition(this, newX, newY);
+    public boolean isAdjacentToLake() {
+        // Check if adjacent to any lake tile
+        for (int[] lake : LAKE_REGIONS) {
+            int lakeX = lake[0];
+            int lakeY = lake[1];
+            if ((Math.abs(x - lakeX) == 1 && y == lakeY) ||
+                    (Math.abs(y - lakeY) == 1 && x == lakeX)) {
                 return true;
             }
         }
-
         return false;
     }
 
-    private boolean canJumpLake(int newX, int newY, Board board) {
-        int dx = newX - x;
-        int dy = newY - y;
+    public boolean isJumpingOverLake(int dx, int dy, Board board) {
+        // Determine jump direction and distance
+        int directionX = Integer.signum(dx);
+        int directionY = Integer.signum(dy);
 
-        // Check if the move is horizontal or vertical
-        if (dx != 0 && dy != 0) {
-            return false; // Diagonal moves are not allowed
+        int targetX = x + (4 * directionX);
+        int targetY = y + (3 * directionY);
+
+        // Validate target position
+        if (!board.isValidPosition(targetX, targetY) ||
+                board.isLake(targetX, targetY)) {
+            return false;
         }
 
-        // Check if the jump is exactly 3 squares (the width of the lake)
-        if (Math.abs(dx) != 3 && Math.abs(dy) != 3) {
-            return false; // Lion must jump exactly 3 squares to cross the lake
+        // Check intermediate tiles (lake and no Rats)
+        int checkX = x + directionX;
+        int checkY = y + directionY;
+        for (int i = 0; i < 2; i++) {
+            if (!board.isLake(checkX, checkY)) return false;
+            Piece blocker = board.getPiece(checkX, checkY);
+            if (blocker != null && blocker.getName().equals("Rat")) return false;
+            checkX += directionX;
+            checkY += directionY;
         }
 
-        // Determine the direction of the jump
-        int stepX = dx == 0 ? 0 : dx / Math.abs(dx);
-        int stepY = dy == 0 ? 0 : dy / Math.abs(dy);
-
-        // Check if the lion is jumping over one of the two lakes
-        boolean isJumpingOverLake = false;
-
-        // Lake 1: Columns 1-2, Rows 3-5
-        if ((x == 3 && y == 0 && newX == 3 && newY == 3) || // Left to right
-                (x == 3 && y == 3 && newX == 3 && newY == 0)) { // Right to left
-            isJumpingOverLake = true;
-        }
-
-        // Lake 2: Columns 4-5, Rows 3-5
-        if ((x == 3 && y == 3 && newX == 3 && newY == 6) || // Left to right
-                (x == 3 && y == 6 && newX == 3 && newY == 3)) { // Right to left
-            isJumpingOverLake = true;
-        }
-
-        if (!isJumpingOverLake) {
-            return false; // Lion is not jumping over a lake
-        }
-
-        // Check if the path over the lake is clear
-        int currentX = x + stepX;
-        int currentY = y + stepY;
-
-        while (currentX != newX || currentY != newY) {
-            // Check if the current square is a lake
-            if (board.getTerrain(currentX, currentY) != '~') {
-                return false; // Path is not entirely over the lake
-            }
-
-            // Check if a Rat is blocking the path
-            Piece blockingPiece = board.getPiece(currentX, currentY);
-            if (blockingPiece != null && blockingPiece.getName().equals("Rat")) {
-                return false; // Rat is blocking the path
-            }
-
-            currentX += stepX;
-            currentY += stepY;
-        }
-
-        // Check the landing square
-        Piece targetPiece = board.getPiece(newX, newY);
-        if (targetPiece == null || (this.strength >= targetPiece.getStrength() && !isSamePlayer(targetPiece))) {
-            board.updatePiecePosition(this, newX, newY);
-            return true;
-        }
-
-        return false;
+        // Check target square
+        Piece target = board.getPiece(targetX, targetY);
+        return target == null || canCapture(target);
     }
 
-    private boolean isSamePlayer(Piece targetPiece) {
-        // Check if the target piece belongs to the same player
-        return this.getPlayer().equals(targetPiece.getPlayer());
+    public boolean handleLakeJump(int dx, int dy, Board board) {
+        int targetX = x + (4 * Integer.signum(dx)); // 4 steps for vertical jump
+        int targetY = y + (3 * Integer.signum(dy)); // 3 steps for horizontal jump
+
+        Piece target = board.getPiece(targetX, targetY);
+        if (target != null) board.removePiece(target);
+
+        board.updatePiecePosition(this, targetX, targetY);
+        return true;
+    }
+
+    public boolean handleRegularMove(int newX, int newY, Board board) {
+        Piece target = board.getPiece(newX, newY);
+        if (target != null && !canCapture(target)) {
+            return false;
+        }
+
+        if (target != null) {
+            board.removePiece(target);
+        }
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }

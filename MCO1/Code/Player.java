@@ -1,24 +1,26 @@
 import java.util.ArrayList;
+import java.util.List;
 
 public class Player {
     private String name;
     private ArrayList<Piece> pieces;
 
-    public Player(String name, Piece lion, Piece rat) {
+    public Player(String name, List<Piece> pieces) {
         this.name = name;
-        this.pieces = new ArrayList<Piece>();
+        this.pieces = new ArrayList<>();
 
-        setPiece(lion); // Set the player for the Lion
-        setPiece(rat);  // Set the player for the Rat
+        for (Piece piece : pieces) {
+            addPiece(piece); // Add pieces under ownership of a player
+        }
     }
 
     public String getName() {
         return name;
     }
 
-//    public ArrayList<Piece> getPieces() {
-//        return pieces;
-//    }
+    public List<Piece> getPieces() {
+        return new ArrayList<>(pieces);
+    }
 
     public Piece getPiece(String pieceName) {
         for (Piece piece : pieces) {
@@ -29,14 +31,14 @@ public class Player {
         return null;
     }
 
-    public void setPiece(Piece piece) {
+    public void addPiece(Piece piece) {
         if (piece != null) {
-            piece.setPlayer(this);
-            pieces.add(piece);
+            piece.setPlayer(this); // Sets ownership
+            pieces.add(piece); // Adds to list
         }
     }
 
     public void removePiece(Piece piece) {
-        pieces.remove(piece); // Remove the piece from the list of a player
+        pieces.remove(piece);
     }
 }
