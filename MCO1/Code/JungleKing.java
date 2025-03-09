@@ -153,14 +153,36 @@ public class JungleKing {
 
     public void playTurn(Scanner scanner) {
         board.displayBoard();
+        showCurrentPieces();
         Piece selectedPiece = selectPiece(scanner);
         if (selectedPiece != null) {
             processPlayerMove(scanner, selectedPiece);
         }
     }
 
+    private void showCurrentPieces() {
+        System.out.println("\nCurrent Player's Pieces:");
+
+        // Lion position
+        Piece lion = currentPlayer.getPiece("Lion");
+        if(lion != null) {
+            System.out.println(" - Lion at (" + lion.getX() + "," + lion.getY() + ")");
+        } else {
+            System.out.println(" - Lion has been captured!");
+        }
+
+        // Rat position
+        Piece rat = currentPlayer.getPiece("Rat");
+        if(rat != null) {
+            System.out.println(" - Rat at (" + rat.getX() + "," + rat.getY() + ")");
+        } else {
+            System.out.println(" - Rat has been captured!");
+        }
+    }
+
     public Piece selectPiece(Scanner scanner) {
-        System.out.print("\n" + currentPlayer.getName() + "'s turn. Choose a piece to move (L for Lion, R for Rat): ");
+        System.out.println("\n=== " + currentPlayer.getName() + "'s TURN ===");
+        System.out.print("Choose a piece to move (L for Lion, R for Rat): ");
         String input = scanner.nextLine().toUpperCase();
 
         switch (input) {
@@ -188,8 +210,10 @@ public class JungleKing {
         System.out.print("Enter move (W/A/S/D): ");
         String move = scanner.nextLine().toUpperCase();
 
-        int newX = piece.getX();
-        int newY = piece.getY();
+        int originalX = piece.getX();
+        int originalY = piece.getY();
+        int newX = originalX;
+        int newY = originalY;
         switch (move) {
             case "W":
                 newX--;
@@ -211,7 +235,10 @@ public class JungleKing {
         if (board.isValidMove(newX, newY, currentPlayer)) {
             boolean moveSuccess = piece.move(newX, newY, board);
             if (moveSuccess) {
-                checkWinCondition(newX, newY);
+                // Show move confirmation
+                System.out.printf("\nMoved %s from (%d,%d) to (%d,%d)\n",
+                        piece.getName(), originalX, originalY, newX, newY);
+                checkWin(newX, newY);
                 switchTurn();
             } else {
                 System.out.println("\n[!] Invalid move. Try again.");
@@ -221,8 +248,9 @@ public class JungleKing {
         }
     }
 
-    public void checkWinCondition(int x, int y) {
+    public void checkWin(int x, int y) {
         if (isWinningMove(x, y, currentPlayer, board)) {
+            System.out.println("\n=== WINNER ===");
             System.out.println(currentPlayer.getName() + " wins!");
             gameOver = true;
         }

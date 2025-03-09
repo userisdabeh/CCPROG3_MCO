@@ -72,10 +72,10 @@ public class Board {
         markPositions(display, p1);
         markPositions(display, p2);
 
-        // Print
+        System.out.println("\n=== JUNGLE KING ===");
         System.out.println("\n  0 1 2 3 4 5 6 y");
         for(int i=0; i<9; i++) {
-            System.out.print(i + " ");
+            System.out.print(i + "  ");
             for(int j=0; j<7; j++) {
                 System.out.print(display[i][j] + " ");
             }
@@ -130,6 +130,7 @@ public class Board {
     }
 
     public void displayBoard() {
+        System.out.println("\n== JUNGLE KING ==");
         System.out.println("\n   0 1 2 3 4 5 6 y");
         for(int i=0; i<9; i++) {
             System.out.print(i + "  ");

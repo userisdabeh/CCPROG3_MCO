@@ -13,7 +13,6 @@ public abstract class Piece {
 
     public abstract boolean move(int newX, int newY, Board board);
 
-    // Common logic for all pieces
     protected boolean canCapture(Piece target) {
         return target != null && !isSamePlayer(target) && this.strength >= target.strength;
     }
@@ -22,7 +21,6 @@ public abstract class Piece {
         return this.player != null && target.player != null && this.player.equals(target.player);
     }
 
-    // Getters and setters
     public int getX() {
         return x;
     }
