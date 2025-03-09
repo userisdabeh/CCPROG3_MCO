@@ -195,7 +195,7 @@ public class Board {
      * Displays the current state of the board.
      */
     public void displayBoard() {
-        System.out.println("\n== JUNGLE KING ==");
+        System.out.println("\n=== JUNGLE KING ===");
         System.out.println("\n   0 1 2 3 4 5 6 y");
         for(int i=0; i<9; i++) {
             System.out.print(i + "  ");

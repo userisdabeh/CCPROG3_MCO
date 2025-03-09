@@ -24,10 +24,14 @@ public class Lion extends Piece {
         int dx = newX - x;
         int dy = newY - y;
 
-        if (!board.isValidPosition(newX, newY)) return false;
+        if (!board.isValidPosition(newX, newY)) {
+            return false;
+        }
 
         // Only allow straight line movement
-        if (dx != 0 && dy != 0) return false;
+        if (dx != 0 && dy != 0) {
+            return false;
+        }
 
         // Check if attempting lake jump
         if (isLakeEdge(x, y) && isJumpingOverLake(dx, dy, board)) {
@@ -46,17 +50,10 @@ public class Lion extends Piece {
      * @return true if the Lion is at the edge of a lake, false otherwise.
      */
     public boolean isLakeEdge(int x, int y) {
-        // North edges (row 2) of both lakes
-        boolean northEdge = (x == 2) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5));
-
-        // South edges (row 6) of both lakes
-        boolean southEdge = (x == 6) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5));
-
-        // West edges (columns 0 and 3)
-        boolean westEdge = (y == 0 || y == 3) && (x >= 3 && x <= 5);
-
-        // East edges (columns 3 and 6)
-        boolean eastEdge = (y == 3 || y == 6) && (x >= 3 && x <= 5);
+        boolean northEdge = (x == 2) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // North edges (row 2) of both lakes
+        boolean southEdge = (x == 6) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // South edges (row 6) of both lakes
+        boolean westEdge = (y == 0 || y == 3) && (x >= 3 && x <= 5); // West edges (columns 0 and 3)
+        boolean eastEdge = (y == 3 || y == 6) && (x >= 3 && x <= 5); // East edges (columns 3 and 6)
 
         return northEdge || southEdge || westEdge || eastEdge;
     }
@@ -116,7 +113,9 @@ public class Lion extends Piece {
         int targetY = y + (3 * Integer.signum(dy)); // 3 steps for horizontal jump
 
         Piece target = board.getPiece(targetX, targetY);
-        if (target != null) board.removePiece(target);
+        if (target != null) {
+            board.removePiece(target);
+        }
 
         board.updatePiecePosition(this, targetX, targetY);
         return true;

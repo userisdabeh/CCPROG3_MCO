@@ -44,7 +44,7 @@ public class Rat extends Piece {
                 return false;
             }
 
-            // Special case: The Rat can capture an Elephant only if both are on land
+            // The Rat can capture an Elephant only if both are on land
             if (target.getName().equals("Elephant")) {
                 if (!currentInWater && !targetInWater) {
                     board.removePiece(target);
@@ -53,7 +53,7 @@ public class Rat extends Piece {
                 }
             }
 
-            // Special case: Rats can capture other Rats only if both are in water
+            // Rats can capture other Rats only if both are in water
             else if (target.getName().equals("Rat")) {
                 if (!(newInWater && targetInWater)) {
                     return false;
@@ -64,7 +64,7 @@ public class Rat extends Piece {
                 board.removePiece(target);
             }
 
-            // Standard capture rules: The Rat can capture weaker or equal-strength pieces but not in water
+            // The Rat can capture weaker or equal-strength pieces but not in water
             else {
                 if (this.strength < target.getStrength()) {
                     return false;
