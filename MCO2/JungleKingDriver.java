@@ -9,7 +9,8 @@ public class JungleKingDriver {
      * @param args Command-line arguments (unused).
      */
     public static void main(String[] args) {
-        JungleKing game = new JungleKing();
-        game.startGame();
+        //JungleKing game = new JungleKing();
+        JungleKingView view = new JungleKingView();
+        //game.startGame();
     }
 }
