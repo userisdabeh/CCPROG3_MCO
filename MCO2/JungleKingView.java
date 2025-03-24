@@ -18,7 +18,7 @@ public class JungleKingView{
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
 
         landingLabel.setFont(font);
-        landingLabel.setForeground(Color.decode("#FF5733"));
+        landingLabel.setForeground(Color.decode("#000000"));
         landingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         landingButton.setFont(font);
@@ -36,8 +36,16 @@ public class JungleKingView{
     }
 
     public void startGame() {
-        JungleKing game = new JungleKing();
-        game.startGame();
+        /* JungleKing game = new JungleKing();
+        game.startGame(); */
+        frame.getContentPane().removeAll();
+
+        GamePanelView gamePanel = new GamePanelView();
+
+        frame.setContentPane(gamePanel.getMainPanel());
+        frame.revalidate();
+        frame.repaint();
+        frame.setVisible(true);
     }
 
     public void setController(JungleKingController controller) {
