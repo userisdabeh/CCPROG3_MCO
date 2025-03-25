@@ -2,10 +2,10 @@ import java.util.*;
 
 /**
  * JungleKing class is the main class that runs the Jungle King game.
- * It initializes the game, sets up the board, and starts the game loop.
+ * It initializes the game, sets up the board1, and starts the game loop.
  */
 public class JungleKing {
-    private Board board;
+    private Board board1;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
@@ -15,23 +15,23 @@ public class JungleKing {
 
     /**
      * Constructor for the JungleKing class.
-     * Initializes the game, sets up the board, and starts the game loop.
+     * Initializes the game, sets up the board1, and starts the game loop.
      */
-    public JungleKing() {
+    public JungleKing(Board board) {
         scanner = new Scanner(System.in);
-        board = new Board();  // Now initializes possible positions internally
+        board1 = board;  // Now initializes possible positions internally
         createPlayers();
-        showInitialPositions();
-        determineFirstPlayer();
-        setupBoard();
+        //showInitialPositions();
+        //determineFirstPlayer();
+        //setupboard1(); 
     }
 
     /**
      * Creates the players for the game.
      */
     public void createPlayers() {
-        player1 = new Player("Player 1", createPieces(board.getP1Possible()));
-        player2 = new Player("Player 2", createPieces(board.getP2Possible()));
+        player1 = new Player("Player 1", createPieces(board1.getP1Possible()));
+        player2 = new Player("Player 2", createPieces(board1.getP2Possible()));
     }
 
     /**
@@ -58,29 +58,34 @@ public class JungleKing {
     }
 
     /**
-     * Displays the initial positions of the pieces on the board.
+     * Displays the initial positions of the pieces on the board1.
      */
     public void showInitialPositions() {
-        board.showPossiblePositions();  // Now parameterless
+        board1.showPossiblePositions();  // Now parameterless
     }
 
     /**
      * Determines which player goes first based on the strength of the animal piece chosen.
      * The player who chooses the animal with the higher strength goes first.
      */
-    public void determineFirstPlayer() {
-        System.out.println("\n== Determine First player ==");
-        int p1Strength = selectAnimal(player1, board.getP1Possible());
-        int p2Strength = selectAnimal(player2, board.getP2Possible());
+    public int determineFirstPlayer(int row, int col) {
+        //System.out.println("\n== Determine First player ==");
+        int p1Strength = selectAnimal(player1, board1.getP1Possible(), row, col);
+        int p2Strength = selectAnimal(player2, board1.getP2Possible(), row, col);
+        int ret;
 
         // Choose the first player to go based on the strength of the animal piece chosen
-        System.out.printf("\nPlayer 1 strength: %d | Player 2 strength: %d%n", p1Strength, p2Strength);
+        //System.out.printf("\nPlayer 1 strength: %d | Player 2 strength: %d%n", p1Strength, p2Strength);
         if (p1Strength >= p2Strength) {
             currentPlayer = player1;
+            ret = 1;
         } else {
             currentPlayer = player2;
+            ret = 2;
         }
         System.out.println("[!] " + currentPlayer.getName() + " goes first!");
+
+        return ret;
     }
 
     /**
@@ -91,9 +96,9 @@ public class JungleKing {
      * @param positions The list of possible positions for the pieces.
      * @return The strength of the selected animal piece, or 0 if not found.
      */
-    public int selectAnimal(Player player, ArrayList<int[]> positions) {
-        System.out.println(player.getName() + ":");
-        int[] choice = getValidPosition(positions);
+    public int selectAnimal(Player player, ArrayList<int[]> positions, int row, int col) {
+        //System.out.println(player.getName() + ":");
+        int[] choice = getValidPosition(positions, row, col);
 
         // Find the selected piece's strength
         for (Piece piece : player.getPieces()) {
@@ -111,50 +116,38 @@ public class JungleKing {
      * @param positions The list of possible positions for the pieces.
      * @return The valid position entered by the player.
      */
-    public int[] getValidPosition(ArrayList<int[]> positions) {
-        while (true) {
-            System.out.print("Enter coordinates (x,y): ");
-            String input = scanner.nextLine().trim();
+    public int[] getValidPosition(ArrayList<int[]> positions, int row, int col) {     
+        int x = row;
+        int y = col; 
+        int[] coord = {x, y};
 
-            if (input.contains(",")) {  // Will only work if the input contains ","
-                try { // Might throw exceptions
-                    String[] parts = input.split(",");
-                    int x = Integer.parseInt(parts[0].trim());
-                    int y = Integer.parseInt(parts[1].trim());
-                    int[] coord = {x, y};
-
-                    for (int[] pos : positions) {
-                        if (pos[0] == x && pos[1] == y) {
-                            return coord;
-                        }
-                    }
-                    System.out.println("[!] Not a valid starting position!");
-                } catch (NumberFormatException e) { // Catches exception when trying to convert non-numeric text to numbers
-                    System.out.println("[!] Please enter numbers only!");
-                }
-            } else {
-                System.out.println("[!] Invalid format! Use comma between numbers");
+        for (int[] pos : positions) {
+            if (pos[0] == x && pos[1] == y) {
+                return coord;
             }
         }
+        System.out.println("[!] Not a valid starting position!");
+
+        return new int[]{-1, -1};
     }
 
     /**
-     * Sets up the board with the players' pieces.
+     * Sets up the board1 with the players' pieces.
      */
-    public void setupBoard() {
-        board = new Board();
-        placePiecesOnBoard(player1);
-        placePiecesOnBoard(player2);
+    public void setupboard1() {
+        board1 = new board1();
+        placePiecesOnboard1(player1);
+        placePiecesOnboard1(player2);
     }
 
     /**
-     * Places the players' pieces on the board.
+     * Places the players' pieces on the board1.
      *
-     * @param player The player whose pieces are to be placed on the board.
+     * @param player The player whose pieces are to be placed on the board1.
      */
-    public void placePiecesOnBoard(Player player) {
+    public void placePiecesOnboard1(Player player) {
         for (Piece piece : player.getPieces()) {
-            board.placePiece(piece, piece.getX(), piece.getY());
+            board1.placePiece(piece, piece.getX(), piece.getY());
         }
     }
 
@@ -171,12 +164,12 @@ public class JungleKing {
 
     /**
      * Manage the player's turn.
-     * Displays the board, shows the current pieces, and processes the player's move.
+     * Displays the board1, shows the current pieces, and processes the player's move.
      *
      * @param scanner The scanner object to read input from the player.
      */
     public void playTurn(Scanner scanner) {
-        board.displayBoard();
+        board1.displayboard1();
         showCurrentPieces();
         Piece selectedPiece = selectPiece(scanner);
         if (selectedPiece != null) {
@@ -233,14 +226,14 @@ public class JungleKing {
     }
 
     /**
-     * Validates the selected piece. If the piece is null, it is removed from the board.
+     * Validates the selected piece. If the piece is null, it is removed from the board1.
      *
      * @param piece The selected piece to validate.
      * @return The validated piece, or null if the piece is removed.
      */
     public Piece validatePiece(Piece piece) {
         if (piece == null) {
-            System.out.println("[!] This piece is already removed from the board.");
+            System.out.println("[!] This piece is already removed from the board1.");
             return null;
         }
         return piece;
@@ -248,7 +241,7 @@ public class JungleKing {
 
     /**
      * Processes the player's move.
-     * The player enters a move (W/A/S/D) to move the piece on the board.
+     * The player enters a move (W/A/S/D) to move the piece on the board1.
      *
      * @param scanner The scanner object to read input from the player.
      * @param piece The selected piece to move.
@@ -279,8 +272,8 @@ public class JungleKing {
                 return;
         }
 
-        if (board.isValidMove(newX, newY, currentPlayer)) {
-            boolean moveSuccess = piece.move(newX, newY, board);
+        if (board1.isValidMove(newX, newY, currentPlayer)) {
+            boolean moveSuccess = piece.move(newX, newY, board1);
             if (moveSuccess) {
                 // Show move confirmation
                 System.out.printf("\nMoved %s from (%d,%d) to (%d,%d)\n",

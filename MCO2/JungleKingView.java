@@ -9,7 +9,7 @@ public class JungleKingView{
     private Font font = new Font("Helvetica", Font.BOLD, 30);
 
     public JungleKingView(JungleKingController controller) {
-        frame.setSize(800, 600);
+        frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
@@ -41,6 +41,8 @@ public class JungleKingView{
         frame.getContentPane().removeAll();
 
         GamePanelView gamePanel = new GamePanelView();
+        GamePanelController gamePanelController = new GamePanelController(gamePanel);
+        gamePanel.setController(gamePanelController);
 
         frame.setContentPane(gamePanel.getMainPanel());
         frame.revalidate();

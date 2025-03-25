@@ -4,10 +4,14 @@ import javax.swing.JButton;
 public class GamePanelController implements ActionListener{
     private JButton[][] boardTiles;
     private Board board;
+    private JungleKing jungleKing;
+    private GamePanelView view1;
 
-    public GamePanelController(JButton[][] boardTiles, Board board) {
-        this.boardTiles = boardTiles;
-        this.board = board;
+    public GamePanelController(GamePanelView view) {
+        view1 = view;
+        boardTiles = view.boardTiles;
+        board = view.board;
+        jungleKing = new JungleKing(board);
     }
 
     @Override
@@ -15,6 +19,8 @@ public class GamePanelController implements ActionListener{
         JButton button = (JButton) e.getSource();
         int row = -1;
         int col = -1;
+        int flag;
+
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
                 if (boardTiles[i][j] == button) {
@@ -25,10 +31,8 @@ public class GamePanelController implements ActionListener{
             }
         }
 
-        if(boardTiles[row][col].getIcon() == null) {
-            boardTiles[row][col].setIcon(board.getIcon(row, col));
-        } else {
-            boardTiles[row][col].setIcon(null);
-        }
+        System.out.println("Button pressed at: " + row + ", " + col);
+
+        flag = jungleKing.determineFirstPlayer(row, col);
     }
 }

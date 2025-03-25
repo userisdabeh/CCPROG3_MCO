@@ -2,7 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 
 public class GamePanelView{
-    private Board board = new Board();
+    public Board board = new Board();
     private LakeView lakeView = new LakeView();
     private TrapView trapView = new TrapView();
     private HomeBaseView homeBaseView = new HomeBaseView();
@@ -12,7 +12,7 @@ public class GamePanelView{
     private JPanel gameP = new JPanel();
     private JPanel boardP = new JPanel();
     public JPanel mainPanel = new JPanel();
-    private JButton[][] boardTiles = new JButton[9][7];
+    public JButton[][] boardTiles = new JButton[9][7];
 
     ImageIcon tigerGreen;
     ImageIcon tigerBlue;
@@ -36,7 +36,7 @@ public class GamePanelView{
     ImageIcon lake;
     ImageIcon genIcon;
 
-    public GamePanelView (){
+    public GamePanelView () {
         mainPanel.setLayout(new BorderLayout());
 
         gameP.setBackground(Color.decode("#B2FBA5"));
@@ -149,5 +149,13 @@ public class GamePanelView{
     
     public JPanel getMainPanel() {
         return mainPanel;
+    }
+
+    public void setController(GamePanelController controller) {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                boardTiles[i][j].addActionListener(controller);
+            }
+        }
     }
 }
