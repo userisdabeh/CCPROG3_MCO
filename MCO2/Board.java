@@ -14,7 +14,7 @@ public class Board {
         setupPossiblePositions();
     }
 
-    private void setupPossiblePositions() {
+    public void setupPossiblePositions() {
         // Player 1 positions
         p1Possible.add(new int[]{8,6});
         p1Possible.add(new int[]{6,6});
@@ -76,7 +76,7 @@ public class Board {
     public ArrayList<int[]> getP1Possible() { return p1Possible; }
     public ArrayList<int[]> getP2Possible() { return p2Possible; }
 
-    private void setupTerrain() {
+    public void setupTerrain() {
         // Initialize all tiles to normal terrain first
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
@@ -160,6 +160,13 @@ public class Board {
      */
     public boolean isLake(int x, int y) {
         return isValidPosition(x, y) && terrain[x][y] instanceof Lake;
+    }
+
+    /**
+     * Checks if position contains a trap.
+     */
+    public boolean isTrap(int x, int y) {
+        return isValidPosition(x, y) && terrain[x][y] instanceof Trap;
     }
 
     /**
