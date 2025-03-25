@@ -11,5 +11,4 @@ public class JungleKingController implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         view.startGame();
     }
-    
 }

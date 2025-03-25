@@ -5,6 +5,8 @@ public class GamePanelView{
     private Board board = new Board();
     private LakeView lakeView = new LakeView();
     private TrapView trapView = new TrapView();
+    private HomeBaseView homeBaseView = new HomeBaseView();
+
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
     private JLabel playerName = new JLabel("Player 1");
     private JPanel gameP = new JPanel();
@@ -62,6 +64,8 @@ public class GamePanelView{
                 JButton tile = new JButton();
                 boardTiles[i][j] = tile;
                 tile.setBackground(Color.decode("#FFFFFF"));
+                tile.setPreferredSize(new Dimension(50, 50));
+                boardTiles[i][j].setPreferredSize(new Dimension(50, 50));
                 boardP.add(tile);
                 tile.setFocusable(false);
             }
@@ -125,12 +129,6 @@ public class GamePanelView{
         Image ratBlueImg = new ImageIcon(getClass().getResource("./img/rat-blue.png")).getImage(); 
         ratBlue = new ImageIcon(ratBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
 
-        Image denBlueImg = new ImageIcon(getClass().getResource("./img/den-blue.png")).getImage();
-        denBlue = new ImageIcon(denBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image denGreenImg = new ImageIcon(getClass().getResource("./img/den-green.png")).getImage();
-        denGreen = new ImageIcon(denGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
         Image genIconImg = new ImageIcon(getClass().getResource("./img/shou2025.png")).getImage();
         genIcon = new ImageIcon(genIconImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
     }
@@ -146,6 +144,7 @@ public class GamePanelView{
 
         lakeView.addLakeIcons(board, boardTiles);
         trapView.addTrapIcons(board, boardTiles);
+        homeBaseView.addDenIcons(board, boardTiles);
     }
     
     public JPanel getMainPanel() {
