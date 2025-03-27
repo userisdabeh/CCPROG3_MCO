@@ -1,17 +1,13 @@
 import java.awt.event.*;
-import javax.swing.JButton;
+import javax.swing.*;
 
-public class GamePanelController implements ActionListener{
-    private JButton[][] boardTiles;
-    private Board board;
-    private JungleKing jungleKing;
-    private GamePanelView view1;
+public class GamePanelController implements ActionListener {
+    private final JungleKing jungleKing;
+    private final GamePanelView view;
 
-    public GamePanelController(GamePanelView view) {
-        view1 = view;
-        boardTiles = view.boardTiles;
-        board = view.board;
-        jungleKing = new JungleKing(board);
+    public GamePanelController(GamePanelView view, JungleKing jungleKing) {
+        this.view = view;
+        this.jungleKing = jungleKing;
     }
 
     @Override
@@ -19,11 +15,11 @@ public class GamePanelController implements ActionListener{
         JButton button = (JButton) e.getSource();
         int row = -1;
         int col = -1;
-        int flag;
 
+        // Find clicked button coordinates
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
-                if (boardTiles[i][j] == button) {
+                if (view.boardTiles[i][j] == button) {
                     row = i;
                     col = j;
                     break;
@@ -31,8 +27,13 @@ public class GamePanelController implements ActionListener{
             }
         }
 
-        System.out.println("Button pressed at: " + row + ", " + col);
-
-        jungleKing.handleStartingPosition(row, col);
+        if (row != -1 && col != -1) {
+            boolean selectionComplete = jungleKing.handleStartingPosition(row, col);
+            if (selectionComplete) {
+                SwingUtilities.invokeLater(() -> {
+                    view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + " goes first!");
+                });
+            }
+        }
     }
 }

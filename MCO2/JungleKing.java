@@ -39,6 +39,10 @@ public class JungleKing {
         player2 = new Player("Player 2", createPieces(board1.getP2Possible()));
     }
 
+    public String getCurrentPlayerName() {
+        return currentPlayer != null ? currentPlayer.getName() : "";
+    }
+
     /**
      * Creates the pieces for the players.
      * Each piece is assigned a random position from the list of possible positions.

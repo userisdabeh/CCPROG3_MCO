@@ -8,11 +8,13 @@ public class GamePanelView{
     private HomeBaseView homeBaseView = new HomeBaseView();
 
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
-    private JLabel playerName = new JLabel("Player 1");
+    private JLabel playerName = new JLabel("");
     private JPanel gameP = new JPanel();
     private JPanel boardP = new JPanel();
     public JPanel mainPanel = new JPanel();
     public JButton[][] boardTiles = new JButton[9][7];
+
+    private final JungleKing jungleKing;
 
     ImageIcon tigerGreen;
     ImageIcon tigerBlue;
@@ -36,7 +38,9 @@ public class GamePanelView{
     ImageIcon lake;
     ImageIcon genIcon;
 
-    public GamePanelView () {
+    public GamePanelView (JungleKing jungleKing) {
+        this.jungleKing = jungleKing;
+
         mainPanel.setLayout(new BorderLayout());
 
         gameP.setBackground(Color.decode("#B2FBA5"));
@@ -157,5 +161,15 @@ public class GamePanelView{
                 boardTiles[i][j].addActionListener(controller);
             }
         }
+    }
+
+    public void updatePlayerDisplay(String text) {
+        playerName.setText(text);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+    }
+
+    public void setCurrentPlayer(String playerName) {
+        this.playerName.setText(playerName);
     }
 }

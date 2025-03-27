@@ -1,14 +1,20 @@
-import java.awt.*;
 import javax.swing.*;
+import java.awt.*;
 
-public class JungleKingView{
+public class JungleKingView {
     private JFrame frame = new JFrame("Jungle King Game");
     private JPanel menuPanel = new JPanel();
     private JLabel landingLabel = new JLabel("Welcome to Jungle King!");
     private JButton landingButton = new JButton("Start Game");
     private Font font = new Font("Helvetica", Font.BOLD, 30);
+    private final JungleKing jungleKing;
 
-    public JungleKingView(JungleKingController controller) {
+    public JungleKingView(JungleKing jungleKing) {
+        this.jungleKing = jungleKing;
+        initializeFrame();
+    }
+
+    private void initializeFrame() {
         frame.setSize(600, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
@@ -24,8 +30,7 @@ public class JungleKingView{
         landingButton.setFont(font);
         landingButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         landingButton.setFocusPainted(false);
-        landingButton.addActionListener(controller);
-        
+
         menuPanel.add(Box.createRigidArea(new Dimension(0, 150)));
         menuPanel.add(landingLabel);
         menuPanel.add(Box.createRigidArea(new Dimension(0, 90)));
@@ -36,18 +41,13 @@ public class JungleKingView{
     }
 
     public void startGame() {
-        /* JungleKing game = new JungleKing();
-        game.startGame(); */
         frame.getContentPane().removeAll();
-
-        GamePanelView gamePanel = new GamePanelView();
-        GamePanelController gamePanelController = new GamePanelController(gamePanel);
+        GamePanelView gamePanel = new GamePanelView(jungleKing);
+        GamePanelController gamePanelController = new GamePanelController(gamePanel, jungleKing);
         gamePanel.setController(gamePanelController);
-
         frame.setContentPane(gamePanel.getMainPanel());
         frame.revalidate();
         frame.repaint();
-        frame.setVisible(true);
     }
 
     public void setController(JungleKingController controller) {
