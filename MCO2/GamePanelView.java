@@ -6,6 +6,7 @@ public class GamePanelView{
     private LakeView lakeView = new LakeView();
     private TrapView trapView = new TrapView();
     private HomeBaseView homeBaseView = new HomeBaseView();
+    private Piece piece = new Piece();
 
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
     public JLabel playerName = new JLabel("Player 1");
@@ -77,7 +78,7 @@ public class GamePanelView{
 
         board.setupPossiblePositions();
         board.setupTerrain();
-        addIconsToPositions();
+        addIconsToPositions(1);
 
 
         mainPanel.add(gameP, BorderLayout.NORTH);
@@ -137,15 +138,25 @@ public class GamePanelView{
         genIcon = new ImageIcon(genIconImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
     }
 
-    private void addIconsToPositions() {
-        for (int[] pos : board.getP1Possible()) {
-            boardTiles[pos[0]][pos[1]].setIcon(genIcon);
+    private void addIconsToPositions(int mode) {
+        if (mode == 1) {
+            for (int[] pos : board.getP1Possible()) {
+                boardTiles[pos[0]][pos[1]].setIcon(genIcon);
+            }
+    
+            for (int[] pos : board.getP2Possible()) {
+                boardTiles[pos[0]][pos[1]].setIcon(genIcon);
+            }
+        } else {
+            for (int[] pos : board.getP1Possible()) {
+                boardTiles[pos[0]][pos[1]].setIcon(null);
+            }
+    
+            for (int[] pos : board.getP2Possible()) {
+                boardTiles[pos[0]][pos[1]].setIcon(null);
+            }
         }
-
-        for (int[] pos : board.getP2Possible()) {
-            boardTiles[pos[0]][pos[1]].setIcon(genIcon);
-        }
-
+        
         lakeView.addLakeIcons(board, boardTiles);
         trapView.addTrapIcons(board, boardTiles);
         homeBaseView.addDenIcons(board, boardTiles);
@@ -171,5 +182,12 @@ public class GamePanelView{
 
     public void setCurrentPlayer(String playerName) {
         this.playerName.setText(playerName);
+    }
+
+    public void startActualGame() {
+        playerName.setText(jungleKing.getCurrentPlayerName());
+        addIconsToPositions(2);
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 }

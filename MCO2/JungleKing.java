@@ -105,8 +105,7 @@ public class JungleKing {
         int p2Strength = getPieceStrength(player2, player2Selection);
 
         currentPlayer = (p1Strength >= p2Strength) ? player1 : player2;
-        //System.out.println("[!] " + currentPlayer.getName() + " goes first!");
-        startGame();
+        System.out.println("[!] " + currentPlayer.getName() + " goes first!");
     }
 
     private int getPieceStrength(Player player, int[] position) {
