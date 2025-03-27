@@ -13,6 +13,11 @@ public class JungleKing {
 
     private Scanner scanner;
 
+    // First player selection state
+    private int selectingPlayer = 1; // 1 for Player 1, 2 for Player 2
+    private int[] player1Selection;
+    private int[] player2Selection;
+
     /**
      * Constructor for the JungleKing class.
      * Initializes the game, sets up the board1, and starts the game loop.
@@ -23,7 +28,7 @@ public class JungleKing {
         createPlayers();
         //showInitialPositions();
         //determineFirstPlayer();
-        //setupboard1(); 
+        //setupboard1();
     }
 
     /**
@@ -55,6 +60,56 @@ public class JungleKing {
         pieces.add(new Rat(positions.get(7)[0], positions.get(7)[1]));
 
         return pieces;
+    }
+
+    public boolean handleStartingPosition(int row, int col) {
+        if (selectingPlayer == 1) {
+            if (isValidSelection(row, col, board1.getP1Possible())) {
+                player1Selection = new int[]{row, col};
+                selectingPlayer = 2;
+                System.out.println("[!] Player 2: Select your starting position!");
+                return false;
+            } else {
+                System.out.println("[!] Invalid position for Player 1!");
+                return false;
+            }
+        } else if (selectingPlayer == 2) {
+            if (isValidSelection(row, col, board1.getP2Possible())) {
+                player2Selection = new int[]{row, col};
+                selectingPlayer = 0;
+                determineFirstPlayer();
+                return true;
+            } else {
+                System.out.println("[!] Invalid position for Player 2!");
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean isValidSelection(int row, int col, ArrayList<int[]> positions) {
+        for (int[] pos : positions) {
+            if (pos[0] == row && pos[1] == col) return true;
+        }
+        return false;
+    }
+
+    private void determineFirstPlayer() {
+        int p1Strength = getPieceStrength(player1, player1Selection);
+        int p2Strength = getPieceStrength(player2, player2Selection);
+
+        currentPlayer = (p1Strength >= p2Strength) ? player1 : player2;
+        System.out.println("[!] " + currentPlayer.getName() + " goes first!");
+        startGame();
+    }
+
+    private int getPieceStrength(Player player, int[] position) {
+        for (Piece piece : player.getPieces()) {
+            if (piece.getX() == position[0] && piece.getY() == position[1]) {
+                return piece.getStrength();
+            }
+        }
+        return 0;
     }
 
     /**
@@ -135,7 +190,7 @@ public class JungleKing {
      * Sets up the board1 with the players' pieces.
      */
     public void setupboard1() {
-        board1 = new board1();
+        board1 = new Board();
         placePiecesOnboard1(player1);
         placePiecesOnboard1(player2);
     }
@@ -169,7 +224,7 @@ public class JungleKing {
      * @param scanner The scanner object to read input from the player.
      */
     public void playTurn(Scanner scanner) {
-        board1.displayboard1();
+        board1.displayBoard();
         showCurrentPieces();
         Piece selectedPiece = selectPiece(scanner);
         if (selectedPiece != null) {

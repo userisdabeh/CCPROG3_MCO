@@ -33,6 +33,6 @@ public class GamePanelController implements ActionListener{
 
         System.out.println("Button pressed at: " + row + ", " + col);
 
-        flag = jungleKing.determineFirstPlayer(row, col);
+        jungleKing.handleStartingPosition(row, col);
     }
 }
