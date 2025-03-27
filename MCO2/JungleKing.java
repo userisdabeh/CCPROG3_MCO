@@ -69,7 +69,7 @@ public class JungleKing {
      * The player who chooses the animal with the higher strength goes first.
      */
     public int determineFirstPlayer(int row, int col) {
-        //System.out.println("\n== Determine First player ==");
+        System.out.println("\n== Determine First player ==");
         int p1Strength = selectAnimal(player1, board1.getP1Possible(), row, col);
         int p2Strength = selectAnimal(player2, board1.getP2Possible(), row, col);
         int ret;
@@ -135,7 +135,7 @@ public class JungleKing {
      * Sets up the board1 with the players' pieces.
      */
     public void setupboard1() {
-        board1 = new board1();
+        board1 = new Board();
         placePiecesOnboard1(player1);
         placePiecesOnboard1(player2);
     }
