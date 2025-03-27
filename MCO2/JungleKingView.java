@@ -1,5 +1,5 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class JungleKingView {
     private JFrame frame = new JFrame("Jungle King Game");
@@ -42,9 +42,11 @@ public class JungleKingView {
 
     public void startGame() {
         frame.getContentPane().removeAll();
+
         GamePanelView gamePanel = new GamePanelView(jungleKing);
         GamePanelController gamePanelController = new GamePanelController(gamePanel, jungleKing);
         gamePanel.setController(gamePanelController);
+        
         frame.setContentPane(gamePanel.getMainPanel());
         frame.revalidate();
         frame.repaint();

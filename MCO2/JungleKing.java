@@ -7,8 +7,8 @@ import javax.swing.JLabel;
  */
 public class JungleKing {
     private Board board1;
-    private Player player1;
-    private Player player2;
+    public Player player1;
+    public Player player2;
     private Player currentPlayer;
     private boolean gameOver;
 

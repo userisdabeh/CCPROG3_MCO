@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.util.List;
 import javax.swing.*;
 
 public class GamePanelView{
@@ -6,7 +7,6 @@ public class GamePanelView{
     private LakeView lakeView = new LakeView();
     private TrapView trapView = new TrapView();
     private HomeBaseView homeBaseView = new HomeBaseView();
-    private Piece piece = new Piece();
 
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
     public JLabel playerName = new JLabel("Player 1");
@@ -16,6 +16,9 @@ public class GamePanelView{
     public JButton[][] boardTiles = new JButton[9][7];
 
     private final JungleKing jungleKing;
+
+    public List<Piece> p1Pieces;
+    public List<Piece> p2Pieces;
 
     ImageIcon tigerGreen;
     ImageIcon tigerBlue;
@@ -148,12 +151,17 @@ public class GamePanelView{
                 boardTiles[pos[0]][pos[1]].setIcon(genIcon);
             }
         } else {
+            clearBoardIcons();
             for (int[] pos : board.getP1Possible()) {
                 boardTiles[pos[0]][pos[1]].setIcon(null);
+
+                // TO-DO: add code to check if current tile for player 1 is what animal
             }
     
             for (int[] pos : board.getP2Possible()) {
                 boardTiles[pos[0]][pos[1]].setIcon(null);
+
+                // TO-DO: add code to check if current tile for player 2 is what animal
             }
         }
         
@@ -189,5 +197,17 @@ public class GamePanelView{
         addIconsToPositions(2);
         mainPanel.revalidate();
         mainPanel.repaint();
+    }
+
+    private void clearBoardIcons() {
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                boardTiles[i][j].setIcon(null);
+            }
+        }
+    }
+
+    public List<Piece> getP1Pieces() {
+        return p1Pieces;
     }
 }
