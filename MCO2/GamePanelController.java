@@ -28,7 +28,7 @@ public class GamePanelController implements ActionListener {
         }
 
         if (row != -1 && col != -1) {
-            boolean selectionComplete = jungleKing.handleStartingPosition(row, col);
+            boolean selectionComplete = jungleKing.handleStartingPosition(row, col, view.playerName);
             if (selectionComplete) {
                 SwingUtilities.invokeLater(() -> {
                     view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + " goes first!");

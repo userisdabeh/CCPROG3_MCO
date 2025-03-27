@@ -8,7 +8,7 @@ public class GamePanelView{
     private HomeBaseView homeBaseView = new HomeBaseView();
 
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
-    private JLabel playerName = new JLabel("");
+    public JLabel playerName = new JLabel("Player 1");
     private JPanel gameP = new JPanel();
     private JPanel boardP = new JPanel();
     public JPanel mainPanel = new JPanel();

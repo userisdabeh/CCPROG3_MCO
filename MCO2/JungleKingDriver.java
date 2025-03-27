@@ -1,4 +1,4 @@
-public class JungleKingDriver {
+    public class JungleKingDriver {
     public static void main(String[] args) {
         Board board = new Board();
         JungleKing jungleKing = new JungleKing(board);
