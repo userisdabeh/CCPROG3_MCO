@@ -6,6 +6,8 @@ public class Board {
     private ArrayList<int[]> p1Possible;
     private ArrayList<int[]> p2Possible;
 
+    private Piece[][] grid = new Piece[9][7];
+
     public Board() {
         terrain = new Terrain[9][7];
         p1Possible = new ArrayList<>();
@@ -210,4 +212,6 @@ public class Board {
         }
         System.out.println("x");
     }
+
+
 }
