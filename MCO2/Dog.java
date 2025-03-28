@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /**
  * Represents the Dog piece in the game.
@@ -17,11 +16,6 @@ public class Dog extends Piece {
         super("Dog", 3, x, y);
     }
 
-    @Override
-    public ArrayList<int[]> getValidMoves(Board board) {
-        return null;
-    }
-
     /**
      * Attempts to move the Dog to the new position.
      * 
@@ -32,6 +26,19 @@ public class Dog extends Piece {
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
-        return false;
+        int dx = newX - x;
+        int dy = newY - y;
+
+        if (!board.isValidPosition(newX, newY)) {
+            return false;
+        }
+
+        // Only allow straight line movement
+        if (dx != 0 && dy != 0) {
+            return false;
+        }
+
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }

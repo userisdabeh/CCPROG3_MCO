@@ -1,5 +1,4 @@
 import java.util.*;
-import javax.swing.JLabel;
 
 /**
  * JungleKing class is the main class that runs the Jungle King game.
@@ -123,30 +122,6 @@ public class JungleKing {
      */
     public void showInitialPositions() {
         board1.showPossiblePositions();  // Now parameterless
-    }
-
-    /**
-     * Determines which player goes first based on the strength of the animal piece chosen.
-     * The player who chooses the animal with the higher strength goes first.
-     */
-    public int determineFirstPlayer(int row, int col) {
-        //System.out.println("\n== Determine First player ==");
-        int p1Strength = selectAnimal(player1, board1.getP1Possible(), row, col);
-        int p2Strength = selectAnimal(player2, board1.getP2Possible(), row, col);
-        int ret;
-
-        // Choose the first player to go based on the strength of the animal piece chosen
-        //System.out.printf("\nPlayer 1 strength: %d | Player 2 strength: %d%n", p1Strength, p2Strength);
-        if (p1Strength >= p2Strength) {
-            currentPlayer = player1;
-            ret = 1;
-        } else {
-            currentPlayer = player2;
-            ret = 2;
-        }
-        System.out.println("[!] " + currentPlayer.getName() + " goes first!");
-
-        return ret;
     }
 
     /**

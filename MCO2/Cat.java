@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /**
  * Represents the Cat piece in the game.
@@ -17,11 +16,6 @@ public class Cat extends Piece {
         super("Cat", 2, x, y);
     }
 
-    @Override
-    public ArrayList<int[]> getValidMoves(Board board) {
-        return null;
-    }
-
     /**
      * Attempts to move the Cat to the new position.
      * 
@@ -32,6 +26,24 @@ public class Cat extends Piece {
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
-        return false;
+        int dx = newX - x;
+        int dy = newY - y;
+
+        if (!board.isValidPosition(newX, newY)) {
+            return false;
+        }
+
+        // Only allow straight line movement
+        if (dx != 0 && dy != 0) {
+            return false;
+        }
+
+        Piece targetPiece = board.getPiece(newX, newY); // Get the piece at the target position
+        if (targetPiece != null && targetPiece.getPlayer() == this.player) {
+            return false; // Prevent moving onto a tile occupied by the same player's piece
+        }
+
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }

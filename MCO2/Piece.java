@@ -26,7 +26,21 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public abstract ArrayList<int[]> getValidMoves(Board board);
+    public ArrayList<int[]> getValidMoves(Board board) {
+        ArrayList<int[]> moves = new ArrayList<>();
+        // Add orthogonal moves
+        int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+        for (int[] dir : directions) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+
+            if (isValidPosition(newX, newY, board)) {
+                moves.add(new int[]{newX, newY});
+            }
+        }
+        return moves;
+    };
 
     protected boolean isValidPosition(int x, int y, Board board) {
         return x >= 0 && x < 9 && y >= 0 && y < 7;
@@ -41,12 +55,18 @@ public abstract class Piece {
      * @return True if the move is valid and executed, false otherwise.
      */
     public boolean move(int newX, int newY, Board board) {
-        if (isValidPosition(newX, newY, board)) {
-            this.x = newX;
-            this.y = newY;
-            return true;
+        if (!isValidPosition(newX, newY, board)) {
+            return false;
         }
-        return false;
+
+        Piece targetPiece = board.getPiece(newX, newY); // Get the piece at the target position
+        if (targetPiece != null && targetPiece.getPlayer() == this.player) {
+            return false; // Prevent moving onto a tile occupied by the same player's piece
+        }
+
+        this.x = newX;
+        this.y = newY;
+        return true;
     }
 
     /**

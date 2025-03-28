@@ -108,9 +108,21 @@ public class GamePanelView {
     }
 
     public void updateAllAnimalIcons() {
-        clearGenIcons();
+        for (int i = 0; i < 9; i++) {
+            for (int j = 0; j < 7; j++) {
+                boardTiles[i][j].setIcon(null);
+            }
+        }
+
+        // Redraw all pieces
         setPlayerIcons(jungleKing.getPlayer1(), 1);
         setPlayerIcons(jungleKing.getPlayer2(), 2);
+
+        // Redraw terrain
+        lakeView.addLakeIcons(board, boardTiles);
+        trapView.addTrapIcons(board, boardTiles);
+        homeBaseView.addDenIcons(board, boardTiles);
+
         mainPanel.revalidate();
         mainPanel.repaint();
     }

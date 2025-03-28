@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /**
  * Represents the Tiger piece in the game.
@@ -17,11 +16,6 @@ public class Tiger extends Piece {
         super("Tiger", 6, x, y);
     }
 
-    @Override
-    public ArrayList<int[]> getValidMoves(Board board) {
-        return null;
-    }
-
     /**
      * Attempts to move the Tiger to the new position.
      * 
@@ -33,5 +27,31 @@ public class Tiger extends Piece {
     @Override
     public boolean move(int newX, int newY, Board board) {
         return false; // Cannot move
+    }
+
+    /**
+     * Handles the Lion's normal movement. 
+     * If the lion is attempting to jump over the lake but there is a rat in the way, the move is invalid.
+     * 
+     * @param newX The new row position of the Lion.
+     * @param newY The new column position of the Lion.
+     * @param board The game board.
+     * @return true if the Lion successfully moves to the new position, false otherwise.
+     */
+    public boolean normalMove(int newX, int newY, Board board) {
+        if(board.isLake(newX, newY)) {
+            return false;
+        }
+        
+        Piece target = board.getPiece(newX, newY);
+        if (target != null && !canCapture(target)) {
+            return false;
+        }
+
+        if (target != null) {
+            board.removePiece(newX, newY);
+        }
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }

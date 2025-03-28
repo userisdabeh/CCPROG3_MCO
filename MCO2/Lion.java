@@ -1,4 +1,3 @@
-import java.util.ArrayList;
 
 /**
  * Represents the Lion piece in the game.
@@ -14,23 +13,6 @@ public class Lion extends Piece {
      */
     public Lion(int x, int y) {
         super("Lion", 7, x, y);
-    }
-
-    @Override
-    public ArrayList<int[]> getValidMoves(Board board) {
-        ArrayList<int[]> moves = new ArrayList<>();
-        // Add orthogonal moves
-        int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
-
-        for (int[] dir : directions) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-
-            if (isValidPosition(newX, newY, board)) {
-                moves.add(new int[]{newX, newY});
-            }
-        }
-        return moves;
     }
 
     /**
