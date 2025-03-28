@@ -54,6 +54,14 @@ public class GamePanelController implements ActionListener {
                 jungleKing.switchTurn();
                 view.updatePlayerDisplay(currentPlayer.getName() + "'s turn");
             }
+            if (selectedPiece.move(row, col, jungleKing.getBoard())) {
+                // Valid move
+                view.updateAllAnimalIcons();
+            } else {
+                // Invalid move - show error
+                System.out.println("Cannot move to occupied friendly tile!");
+            }
+
             selectedPiece = null;
             view.clearHighlights();
         }

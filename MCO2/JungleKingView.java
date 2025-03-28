@@ -15,7 +15,7 @@ public class JungleKingView {
     }
 
     private void initializeFrame() {
-        frame.setSize(600, 600);
+        frame.setSize(400, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);

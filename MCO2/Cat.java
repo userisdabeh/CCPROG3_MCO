@@ -19,7 +19,19 @@ public class Cat extends Piece {
 
     @Override
     public ArrayList<int[]> getValidMoves(Board board) {
-        return null;
+        ArrayList<int[]> moves = new ArrayList<>();
+        // Add orthogonal moves
+        int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+        for (int[] dir : directions) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+
+            if (isValidPosition(newX, newY, board) && !board.isLake(newX, newY)) {
+                moves.add(new int[]{newX, newY});
+            }
+        }
+        return moves;
     }
 
     /**
@@ -32,6 +44,32 @@ public class Cat extends Piece {
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
-        return false;
+        int dx = newX - x;
+        int dy = newY - y;
+
+        if (!board.isValidPosition(newX, newY)) {
+            return false;
+        }
+
+        // Only allow straight line movement
+        if (dx != 0 && dy != 0) {
+            return false;
+        }
+
+        Piece target = board.getPiece(newX, newY);
+        if (target != null && !canCapture(target)) {
+            return false;
+        }
+
+        if (target != null) {
+            if (this.player == target.getPlayer()) {
+                return false;
+            }
+
+            board.removePiece(newX, newY);
+        }
+
+        board.updatePiecePosition(this, newX, newY);
+        return true;
     }
 }
