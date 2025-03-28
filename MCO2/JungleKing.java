@@ -7,8 +7,8 @@ import javax.swing.JLabel;
  */
 public class JungleKing {
     private Board board1;
-    public Player player1;
-    public Player player2;
+    private Player player1;
+    private Player player2;
     private Player currentPlayer;
     private boolean gameOver;
 
@@ -40,10 +40,6 @@ public class JungleKing {
         player2 = new Player("Player 2", createPieces(board1.getP2Possible()));
     }
 
-    public String getCurrentPlayerName() {
-        return currentPlayer != null ? currentPlayer.getName() : "";
-    }
-
     /**
      * Creates the pieces for the players.
      * Each piece is assigned a random position from the list of possible positions.
@@ -67,16 +63,13 @@ public class JungleKing {
         return pieces;
     }
 
-    public boolean handleStartingPosition(int row, int col, JLabel playerName) {
+    public boolean handleStartingPosition(int row, int col) {
         if (selectingPlayer == 1) {
             if (isValidSelection(row, col, board1.getP1Possible())) {
                 player1Selection = new int[]{row, col};
                 selectingPlayer = 2;
-                //System.out.println("[!] Player 2: Select your starting position!");
-                playerName.setText("Player 2");
                 return false;
             } else {
-                //System.out.println("[!] Invalid position for Player 1!");
                 return false;
             }
         } else if (selectingPlayer == 2) {
@@ -86,7 +79,6 @@ public class JungleKing {
                 determineFirstPlayer();
                 return true;
             } else {
-                //System.out.println("[!] Invalid position for Player 2!");
                 return false;
             }
         }
@@ -100,12 +92,21 @@ public class JungleKing {
         return false;
     }
 
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public Board getBoard() {
+        return board1;
+    }
+
     private void determineFirstPlayer() {
         int p1Strength = getPieceStrength(player1, player1Selection);
         int p2Strength = getPieceStrength(player2, player2Selection);
 
         currentPlayer = (p1Strength >= p2Strength) ? player1 : player2;
-        System.out.println("[!] " + currentPlayer.getName() + " goes first!");
+        //System.out.println("[!] " + currentPlayer.getName() + " goes first!");
+//        startGame();
     }
 
     private int getPieceStrength(Player player, int[] position) {
@@ -399,4 +400,9 @@ public class JungleKing {
             currentPlayer = player1;
         }
     }
+
+    public Player getPlayer1() { return player1; }
+    public Player getPlayer2() { return player2; }
+    public String getCurrentPlayerName() { return currentPlayer.getName(); }
+    public int getSelectingPlayer() { return selectingPlayer; }
 }

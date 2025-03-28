@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Elephant piece in the game.
  * The Elephant has a strength of 8 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Elephant extends Piece {
      */
     public Elephant(int x, int y) {
         super("Elephant", 8, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

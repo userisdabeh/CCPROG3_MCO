@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Rat piece in the Jungle King game.
  * The Rat has a strength of 1 and is the only piece that can enter water.
@@ -13,6 +15,11 @@ public class Rat extends Piece {
      */
     public Rat(int x, int y) {
         super("Rat", 1, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Dog piece in the game.
  * The Dog has a strength of 3 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Dog extends Piece {
      */
     public Dog(int x, int y) {
         super("Dog", 3, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

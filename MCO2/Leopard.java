@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Leopard piece in the game.
  * The Leopard has a strength of 5 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Leopard extends Piece {
      */
     public Leopard(int x, int y) {
         super("Leopard", 5, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

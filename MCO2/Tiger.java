@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Tiger piece in the game.
  * The Tiger has a strength of 6 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Tiger extends Piece {
      */
     public Tiger(int x, int y) {
         super("Tiger", 6, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

@@ -1,2 +1,2 @@
-JungleKing game = new JungleKing();
-        game.startGame();
+//JungleKing game = new JungleKing();
+//        game.startGame();

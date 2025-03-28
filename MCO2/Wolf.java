@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Wolf piece in the game.
  * The Wolf has a strength of 4 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Wolf extends Piece {
      */
     public Wolf(int x, int y) {
         super("Wolf", 4, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**

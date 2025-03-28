@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents an abstract game piece in the Jungle King game.
  * Each piece has a name, strength, position, and an associated player.
@@ -24,6 +26,12 @@ public abstract class Piece {
         this.y = y;
     }
 
+    public abstract ArrayList<int[]> getValidMoves(Board board);
+
+    protected boolean isValidPosition(int x, int y, Board board) {
+        return x >= 0 && x < 9 && y >= 0 && y < 7;
+    }
+
     /**
      * Abstract method to be implemented by subclasses defining how a piece moves.
      * 
@@ -32,7 +40,14 @@ public abstract class Piece {
      * @param board The game board where the piece moves.
      * @return True if the move is valid and executed, false otherwise.
      */
-    public abstract boolean move(int newX, int newY, Board board);
+    public boolean move(int newX, int newY, Board board) {
+        if (isValidPosition(newX, newY, board)) {
+            this.x = newX;
+            this.y = newY;
+            return true;
+        }
+        return false;
+    }
 
     /**
      * Determines if this piece can capture another piece.

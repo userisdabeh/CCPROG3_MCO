@@ -1,52 +1,31 @@
 import java.awt.*;
-import java.util.List;
 import javax.swing.*;
 
-public class GamePanelView{
+public class GamePanelView {
     public Board board = new Board();
     private LakeView lakeView = new LakeView();
     private TrapView trapView = new TrapView();
     private HomeBaseView homeBaseView = new HomeBaseView();
-
     private JLabel currentPlayerLabel = new JLabel("Current Player: ");
-    public JLabel playerName = new JLabel("Player 1");
+    public JLabel playerName = new JLabel("");
     private JPanel gameP = new JPanel();
     private JPanel boardP = new JPanel();
     public JPanel mainPanel = new JPanel();
     public JButton[][] boardTiles = new JButton[9][7];
-
     private final JungleKing jungleKing;
 
-    public List<Piece> p1Pieces;
-    public List<Piece> p2Pieces;
+    // Animal icons
+    ImageIcon tigerGreen, tigerBlue, lionGreen, lionBlue, elephantGreen, elephantBlue;
+    ImageIcon catGreen, catBlue, dogGreen, dogBlue, wolfGreen, wolfBlue;
+    ImageIcon leopardGreen, leopardBlue, ratGreen, ratBlue, trap, denBlue, denGreen, lake, genIcon;
 
-    ImageIcon tigerGreen;
-    ImageIcon tigerBlue;
-    ImageIcon lionGreen;
-    ImageIcon lionBlue;
-    ImageIcon elephantGreen;
-    ImageIcon elephantBlue;
-    ImageIcon catGreen;
-    ImageIcon catBlue;
-    ImageIcon dogGreen;
-    ImageIcon dogBlue;
-    ImageIcon wolfGreen;
-    ImageIcon wolfBlue;
-    ImageIcon leopardGreen;
-    ImageIcon leopardBlue;
-    ImageIcon ratGreen;
-    ImageIcon ratBlue;
-    ImageIcon trap;
-    ImageIcon denBlue;
-    ImageIcon denGreen;
-    ImageIcon lake;
-    ImageIcon genIcon;
-
-    public GamePanelView (JungleKing jungleKing) {
+    public GamePanelView(JungleKing jungleKing) {
         this.jungleKing = jungleKing;
+        initializeComponents();
+    }
 
+    private void initializeComponents() {
         mainPanel.setLayout(new BorderLayout());
-
         gameP.setBackground(Color.decode("#B2FBA5"));
         gameP.setLayout(new BoxLayout(gameP, BoxLayout.Y_AXIS));
 
@@ -57,6 +36,7 @@ public class GamePanelView{
         playerName.setFont(new Font("Helvetica", Font.BOLD, 20));
         playerName.setAlignmentX(Component.CENTER_ALIGNMENT);
         playerName.setForeground(Color.decode("#000000"));
+        playerName.setText("Player 1: Select starting position");
 
         gameP.add(Box.createRigidArea(new Dimension(0, 15)));
         gameP.add(currentPlayerLabel);
@@ -65,119 +45,110 @@ public class GamePanelView{
         gameP.add(Box.createRigidArea(new Dimension(0, 15)));
 
         initImages();
+        createBoardTiles();
+        addIconsToPositions();
 
-        boardP.setLayout(new GridLayout(9, 7, 2,2));
+        mainPanel.add(gameP, BorderLayout.NORTH);
+        mainPanel.add(boardP, BorderLayout.CENTER);
+    }
+
+    private void createBoardTiles() {
+        boardP.setLayout(new GridLayout(9, 7, 2, 2));
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
                 JButton tile = new JButton();
                 boardTiles[i][j] = tile;
                 tile.setBackground(Color.decode("#FFFFFF"));
                 tile.setPreferredSize(new Dimension(50, 50));
-                boardTiles[i][j].setPreferredSize(new Dimension(50, 50));
-                boardP.add(tile);
                 tile.setFocusable(false);
+                boardP.add(tile);
             }
         }
-
-        board.setupPossiblePositions();
-        board.setupTerrain();
-        addIconsToPositions(1);
-
-
-        mainPanel.add(gameP, BorderLayout.NORTH);
-        mainPanel.add(boardP, BorderLayout.CENTER);
     }
 
     private void initImages() {
-        Image tigerGreenImg = new ImageIcon(getClass().getResource("./img/tiger-green.png")).getImage();
-        tigerGreen = new ImageIcon(tigerGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image tigerBlueImg = new ImageIcon(getClass().getResource("./img/tiger-blue.png")).getImage();
-        tigerBlue = new ImageIcon(tigerBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image lionGreenImg = new ImageIcon(getClass().getResource("./img/lion-green.png")).getImage();
-        lionGreen = new ImageIcon(lionGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image lionBlueImg = new ImageIcon(getClass().getResource("./img/lion-blue.png")).getImage();
-        lionBlue = new ImageIcon(lionBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image elephantGreenImg = new ImageIcon(getClass().getResource("./img/elephant-green.png")).getImage();
-        elephantGreen = new ImageIcon(elephantGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image elephantBlueImg = new ImageIcon(getClass().getResource("./img/elephant-blue.png")).getImage();
-        elephantBlue = new ImageIcon(elephantBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image catGreenImg = new ImageIcon(getClass().getResource("./img/cat-green.png")).getImage();
-        catGreen = new ImageIcon(catGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image catBlueImg = new ImageIcon(getClass().getResource("./img/cat-blue.png")).getImage();
-        catBlue = new ImageIcon(catBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image dogGreenImg = new ImageIcon(getClass().getResource("./img/dog-green.png")).getImage();
-        dogGreen = new ImageIcon(dogGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image dogBlueImg = new ImageIcon(getClass().getResource("./img/dog-blue.png")).getImage();
-        dogBlue = new ImageIcon(dogBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image wolfGreenImg = new ImageIcon(getClass().getResource("./img/wolf-green.png")).getImage();
-        wolfGreen = new ImageIcon(wolfGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image wolfBlueImg = new ImageIcon(getClass().getResource("./img/wolf-blue.png")).getImage();
-        wolfBlue = new ImageIcon(wolfBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image leopardGreenImg = new ImageIcon(getClass().getResource("./img/leopard-green.png")).getImage();
-        leopardGreen = new ImageIcon(leopardGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image leopardBlueImg = new ImageIcon(getClass().getResource("./img/leopard-blue.png")).getImage();
-        leopardBlue = new ImageIcon(leopardBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image ratGreenImg = new ImageIcon(getClass().getResource("./img/rat-green.png")).getImage();
-        ratGreen = new ImageIcon(ratGreenImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image ratBlueImg = new ImageIcon(getClass().getResource("./img/rat-blue.png")).getImage(); 
-        ratBlue = new ImageIcon(ratBlueImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
-
-        Image genIconImg = new ImageIcon(getClass().getResource("./img/shou2025.png")).getImage();
-        genIcon = new ImageIcon(genIconImg.getScaledInstance(50, 50, java.awt.Image.SCALE_SMOOTH));
+        try {
+            tigerGreen = createScaledIcon("./img/tiger-green.png");
+            tigerBlue = createScaledIcon("./img/tiger-blue.png");
+            lionGreen = createScaledIcon("./img/lion-green.png");
+            lionBlue = createScaledIcon("./img/lion-blue.png");
+            elephantGreen = createScaledIcon("./img/elephant-green.png");
+            elephantBlue = createScaledIcon("./img/elephant-blue.png");
+            catGreen = createScaledIcon("./img/cat-green.png");
+            catBlue = createScaledIcon("./img/cat-blue.png");
+            dogGreen = createScaledIcon("./img/dog-green.png");
+            dogBlue = createScaledIcon("./img/dog-blue.png");
+            wolfGreen = createScaledIcon("./img/wolf-green.png");
+            wolfBlue = createScaledIcon("./img/wolf-blue.png");
+            leopardGreen = createScaledIcon("./img/leopard-green.png");
+            leopardBlue = createScaledIcon("./img/leopard-blue.png");
+            ratGreen = createScaledIcon("./img/rat-green.png");
+            ratBlue = createScaledIcon("./img/rat-blue.png");
+            genIcon = createScaledIcon("./img/shou2025.png");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void addIconsToPositions(int mode) {
-        if (mode == 1) {
-            for (int[] pos : board.getP1Possible()) {
-                boardTiles[pos[0]][pos[1]].setIcon(genIcon);
-            }
-    
-            for (int[] pos : board.getP2Possible()) {
-                boardTiles[pos[0]][pos[1]].setIcon(genIcon);
-            }
-        } else {
-            clearBoardIcons();
-            for (int[] pos : board.getP1Possible()) {
-                boardTiles[pos[0]][pos[1]].setIcon(null);
+    private ImageIcon createScaledIcon(String path) {
+        Image image = new ImageIcon(getClass().getResource(path)).getImage();
+        return new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+    }
 
-                // TO-DO: add code to check if current tile for player 1 is what animal
-            }
-    
-            for (int[] pos : board.getP2Possible()) {
-                boardTiles[pos[0]][pos[1]].setIcon(null);
-
-                // TO-DO: add code to check if current tile for player 2 is what animal
-            }
+    private void addIconsToPositions() {
+        for (int[] pos : board.getP1Possible()) {
+            boardTiles[pos[0]][pos[1]].setIcon(genIcon);
         }
-        
+        for (int[] pos : board.getP2Possible()) {
+            boardTiles[pos[0]][pos[1]].setIcon(genIcon);
+        }
         lakeView.addLakeIcons(board, boardTiles);
         trapView.addTrapIcons(board, boardTiles);
         homeBaseView.addDenIcons(board, boardTiles);
     }
-    
-    public JPanel getMainPanel() {
-        return mainPanel;
+
+    public void updateAllAnimalIcons() {
+        clearGenIcons();
+        setPlayerIcons(jungleKing.getPlayer1(), 1);
+        setPlayerIcons(jungleKing.getPlayer2(), 2);
+        mainPanel.revalidate();
+        mainPanel.repaint();
     }
 
+    private void clearGenIcons() {
+        for (int[] pos : board.getP1Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
+        for (int[] pos : board.getP2Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
+    }
+
+    private void setPlayerIcons(Player player, int playerNumber) {
+        for (Piece piece : player.getPieces()) {
+            int x = piece.getX();
+            int y = piece.getY();
+            boardTiles[x][y].setIcon(getAnimalIcon(piece, playerNumber));
+        }
+    }
+
+    private ImageIcon getAnimalIcon(Piece piece, int playerNumber) {
+        String className = piece.getClass().getSimpleName();
+        switch (className) {
+            case "Elephant": return playerNumber == 1 ? elephantBlue : elephantGreen;
+            case "Lion": return playerNumber == 1 ? lionBlue : lionGreen;
+            case "Tiger": return playerNumber == 1 ? tigerBlue : tigerGreen;
+            case "Leopard": return playerNumber == 1 ? leopardBlue : leopardGreen;
+            case "Wolf": return playerNumber == 1 ? wolfBlue : wolfGreen;
+            case "Dog": return playerNumber == 1 ? dogBlue : dogGreen;
+            case "Cat": return playerNumber == 1 ? catBlue : catGreen;
+            case "Rat": return playerNumber == 1 ? ratBlue : ratGreen;
+            default: return genIcon;
+        }
+    }
+
+    public JPanel getMainPanel() { return mainPanel; }
+
     public void setController(GamePanelController controller) {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 7; j++) {
-                boardTiles[i][j].addActionListener(controller);
+        for (JButton[] row : boardTiles) {
+            for (JButton button : row) {
+                button.addActionListener(controller);
             }
         }
     }
@@ -188,26 +159,19 @@ public class GamePanelView{
         mainPanel.repaint();
     }
 
-    public void setCurrentPlayer(String playerName) {
-        this.playerName.setText(playerName);
-    }
-
-    public void startActualGame() {
-        playerName.setText(jungleKing.getCurrentPlayerName());
-        addIconsToPositions(2);
-        mainPanel.revalidate();
-        mainPanel.repaint();
-    }
-
-    private void clearBoardIcons() {
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 7; j++) {
-                boardTiles[i][j].setIcon(null);
-            }
+    public void highlightValidMoves(Piece piece) {
+        clearHighlights();
+        for (int[] move : piece.getValidMoves(board)) {
+            int x = move[0], y = move[1];
+            boardTiles[x][y].setBackground(Color.YELLOW);
         }
     }
 
-    public List<Piece> getP1Pieces() {
-        return p1Pieces;
+    public void clearHighlights() {
+        for (JButton[] row : boardTiles) {
+            for (JButton tile : row) {
+                tile.setBackground(Color.WHITE);
+            }
+        }
     }
 }

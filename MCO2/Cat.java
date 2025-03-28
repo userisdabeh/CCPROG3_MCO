@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 /**
  * Represents the Cat piece in the game.
  * The Cat has a strength of 2 and is a subclass of Piece.
@@ -13,6 +15,11 @@ public class Cat extends Piece {
      */
     public Cat(int x, int y) {
         super("Cat", 2, x, y);
+    }
+
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return null;
     }
 
     /**
