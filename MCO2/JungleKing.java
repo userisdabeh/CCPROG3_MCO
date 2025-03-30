@@ -205,8 +205,8 @@ public class JungleKing {
      * @param scanner The scanner object to read input from the player.
      */
     public void playTurn(Scanner scanner) {
-        board1.displayBoard();
-        showCurrentPieces();
+        //board1.displayBoard();
+        //showCurrentPieces();
         Piece selectedPiece = selectPiece(scanner);
         if (selectedPiece != null) {
             processPlayerMove(scanner, selectedPiece);
@@ -244,9 +244,9 @@ public class JungleKing {
      * @return The selected piece, or null if not found.
      */
     public Piece selectPiece(Scanner scanner) {
-        System.out.println("\n=== " + currentPlayer.getName() + "'s TURN ===");
-        System.out.print("Choose a piece to move (L for Lion, R for Rat): ");
-        String input = scanner.nextLine().toUpperCase();
+        //System.out.println("\n=== " + currentPlayer.getName() + "'s TURN ===");
+        //System.out.print("Choose a piece to move (L for Lion, R for Rat): ");
+        //String input = scanner.nextLine().toUpperCase();
 
         switch (input) {
             case "L":

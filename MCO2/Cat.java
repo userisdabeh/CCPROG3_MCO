@@ -29,19 +29,47 @@ public class Cat extends Piece {
         int dx = newX - x;
         int dy = newY - y;
 
+        System.out.println("newX: " + newX + ", newY: " + newY);
+        System.out.println("x: " + x + ", y: " + y);
+        System.out.println("dx: " + dx + ", dy: " + dy);
+
         if (!board.isValidPosition(newX, newY)) {
             return false;
         }
 
+        if (dx == 0 && dy == 0) {
+            return false; // Prevent moving to the same position
+        }
+
+        if (dx < -1 || dx > 1 || dy < -1 || dy > 1) {
+            return false; // Prevent moving more than one square in any direction
+        }
+
         // Only allow straight line movement
         if (dx != 0 && dy != 0) {
+            System.out.println("Gotcha");
             return false;
         }
 
         Piece targetPiece = board.getPiece(newX, newY); // Get the piece at the target position
-        if (targetPiece != null && targetPiece.getPlayer() == this.player) {
+        
+        String tempString = (targetPiece != null ? targetPiece.getName() : "None");
+
+        System.out.println("Cat move to: " + newX + ", " + newY);
+        System.out.println("Target piece: " + tempString);
+
+        if (targetPiece != null) {
+            System.out.println("Target piece is not null");
+
+            if(targetPiece.getPlayer() == this.player) {
+                System.out.println("Target piece is the same player");
+            } else {
+                System.out.println("Target piece is not the same player");
+            }
             return false; // Prevent moving onto a tile occupied by the same player's piece
         }
+        
+        System.out.println("Target piece is null");
 
         board.updatePiecePosition(this, newX, newY);
         return true;

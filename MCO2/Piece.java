@@ -55,6 +55,8 @@ public abstract class Piece {
      * @return True if the move is valid and executed, false otherwise.
      */
     public boolean move(int newX, int newY, Board board) {
+        System.out.println("newX: " + newX + ", newY: " + newY);
+
         if (!isValidPosition(newX, newY, board)) {
             return false;
         }

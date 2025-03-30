@@ -54,14 +54,13 @@ public class GamePanelController implements ActionListener {
             }
         } else {
             // Move piece
+            System.out.println("Moving piece: " + selectedPiece.getName() + " to (" + row + ", " + col + ")");
             boolean moveSuccess = selectedPiece.move(row, col, jungleKing.getBoard());
+            System.out.println("Move success: " + moveSuccess);
             if (moveSuccess) {
                 view.updateAllAnimalIcons();
                 jungleKing.switchTurn();
                 view.updatePlayerDisplay(currentPlayer.getName() + "'s turn");
-            }
-            if (selectedPiece.move(row, col, jungleKing.getBoard())) {
-                // Valid move
                 view.updateAllAnimalIcons();
             } else {
                 // Invalid move - show error
