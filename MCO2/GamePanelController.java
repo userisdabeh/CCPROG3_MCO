@@ -1,6 +1,6 @@
-import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.*;
 
 public class GamePanelController implements ActionListener {
     private final JungleKing jungleKing;
@@ -26,6 +26,12 @@ public class GamePanelController implements ActionListener {
         if (jungleKing.getSelectingPlayer() != 0) {
             // Handle initial position selection
             boolean selectionComplete = jungleKing.handleStartingPosition(row, col);
+
+            // Update the player name label based on the current player selecting
+            if(jungleKing.selectingPlayer == 2) {
+                view.playerName.setText("Player 2: Select starting position");
+            }
+
             if (selectionComplete) {
                 SwingUtilities.invokeLater(() -> {
                     view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + " goes first!");

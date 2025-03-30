@@ -14,7 +14,7 @@ public class JungleKing {
     private Scanner scanner;
 
     // First player selection state
-    private int selectingPlayer = 1; // 1 for Player 1, 2 for Player 2
+    public int selectingPlayer = 1; // 1 for Player 1, 2 for Player 2
     private int[] player1Selection;
     private int[] player2Selection;
 
