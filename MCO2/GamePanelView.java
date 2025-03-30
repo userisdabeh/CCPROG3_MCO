@@ -186,4 +186,22 @@ public class GamePanelView {
             }
         }
     }
+
+    public void showWinner(String winnerName) {
+        // Show popup
+        Component frame = null;
+        JOptionPane.showMessageDialog(
+                frame,
+                winnerName + " wins!",
+                "Game Over",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        // Disable board interactions
+        for (JButton[] row : boardTiles) {
+            for (JButton tile : row) {
+                tile.setEnabled(false);
+            }
+        }
+    }
 }

@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Represents the Rat piece in the Jungle King game.
@@ -16,11 +17,16 @@ public class Rat extends Piece {
         super("Rat", 1, x, y);
     }
 
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return generateValidMoves(board);
+    }
+
     /**
      * Attempts to move the Rat to a new position.
      * The Rat moves one step in any cardinal direction (up, down, left, or right).
      * It can enter water and has special capture rules.
-     * 
+     *
      * @param newX The target row position.
      * @param newY The target column position.
      * @param board The game board.
@@ -28,57 +34,53 @@ public class Rat extends Piece {
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
-        // Check if the move is exactly one step in any cardinal direction
-        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) {
-            return false;
+        // Custom water handling
+        if (board.isLake(newX, newY)) {
+            return handleWaterMove(newX, newY, board);
         }
+        return basicMove(newX, newY, board);
+    }
+
+    private boolean handleWaterMove(int newX, int newY, Board board) {
+        // Validate water-specific movement
+        if (!board.isLake(newX, newY)) return false;
+        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) return false;
 
         Piece target = board.getPiece(newX, newY);
         boolean currentInWater = board.isLake(x, y);
-        boolean newInWater = board.isLake(newX, newY);
 
+        // Handle captures in water
         if (target != null) {
-            boolean targetInWater = board.isLake(target.getX(), target.getY());
+            if (target.getPlayer() == player) return false;
 
-            // Prevent capturing a piece from the same team
-            if (this.player == target.getPlayer()) {
+            // Special rat vs rat in water rules
+            if (target instanceof Rat) {
+                if (!board.isLake(target.getX(), target.getY())) return false;
+                if (strength < target.getStrength()) return false;
+            }
+            // Can't capture non-rats in water
+            else {
                 return false;
             }
 
-            // The Rat can capture an Elephant only if both are on land
-            if (target.getName().equals("Elephant")) {
-                if (!currentInWater && !targetInWater) {
-                    board.removePiece(newX, newY);
-                } else {
-                    return false;
-                }
-            }
-
-            // Rats can capture other Rats only if both are in water
-            else if (target.getName().equals("Rat")) {
-                if (!(newInWater && targetInWater)) {
-                    return false;
-                }
-                if (this.strength < target.getStrength()) {
-                    return false;
-                }
-                board.removePiece(newX, newY);
-            }
-
-            // The Rat can capture weaker or equal-strength pieces but not in water
-            else {
-                if (this.strength < target.getStrength()) {
-                    return false;
-                }
-                if (newInWater) {
-                    return false;
-                }
-                board.removePiece(newX, newY);
-            }
+            board.removePiece(newX, newY);
         }
 
-        // Update the Rat's position on the board
+        // Prevent moving from land to water if occupied
+        if (!currentInWater && target != null) return false;
+
         board.updatePiecePosition(this, newX, newY);
         return true;
+    }
+
+    @Override
+    protected boolean canCapture(Piece target, Board board) {
+        // Special case: Rat can capture Elephant on land
+        if (target instanceof Elephant &&
+                !board.isLake(x, y) &&
+                !board.isLake(target.getX(), target.getY())) {
+            return true;
+        }
+        return super.canCapture(target, board);
     }
 }

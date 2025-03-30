@@ -26,21 +26,7 @@ public abstract class Piece {
         this.y = y;
     }
 
-    public ArrayList<int[]> getValidMoves(Board board) {
-        ArrayList<int[]> moves = new ArrayList<>();
-        // Add orthogonal moves
-        int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
-
-        for (int[] dir : directions) {
-            int newX = x + dir[0];
-            int newY = y + dir[1];
-
-            if (isValidPosition(newX, newY, board)) {
-                moves.add(new int[]{newX, newY});
-            }
-        }
-        return moves;
-    };
+    public abstract ArrayList<int[]> getValidMoves(Board board);
 
     protected boolean isValidPosition(int x, int y, Board board) {
         return x >= 0 && x < 9 && y >= 0 && y < 7;
@@ -55,20 +41,100 @@ public abstract class Piece {
      * @return True if the move is valid and executed, false otherwise.
      */
     public boolean move(int newX, int newY, Board board) {
-        System.out.println("newX: " + newX + ", newY: " + newY);
+        if (isValidPosition(newX, newY, board)) {
+            this.x = newX;
+            this.y = newY;
+            return true;
+        }
+        return false;
+    }
 
-        if (!isValidPosition(newX, newY, board)) {
+    protected boolean basicMove(int newX, int newY, Board board) {
+        // Validate 1-step movement
+        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) return false;
+
+        // Check board boundaries
+        if (!board.isValidPosition(newX, newY)) return false;
+
+        // Prevent moving to own base
+        if (board.isOwnBase(newX, newY, player)) return false;
+
+        // Handle captures
+        Piece target = board.getPiece(newX, newY);
+        if (target != null && !canCapture(target, board)) return false;
+
+        // Update position
+        if (target != null) board.removePiece(newX, newY);
+        board.updatePiecePosition(this, newX, newY);
+        return true;
+    }
+
+    protected boolean handleLakeJump(int dx, int dy, Board board) {
+        if (!isLakeEdge(x, y)) return false;
+
+        int directionX = Integer.signum(dx);
+        int directionY = Integer.signum(dy);
+        int targetX = x + (4 * directionX);
+        int targetY = y + (3 * directionY);
+
+        // Validate target position
+        if (!board.isValidPosition(targetX, targetY) || board.isLake(targetX, targetY)) {
             return false;
         }
 
-        Piece targetPiece = board.getPiece(newX, newY); // Get the piece at the target position
-        if (targetPiece != null && targetPiece.getPlayer() == this.player) {
-            return false; // Prevent moving onto a tile occupied by the same player's piece
+        // Check intermediate tiles
+        int checkX = x + directionX;
+        int checkY = y + directionY;
+        for (int i = 0; i < 2; i++) {
+            if (!board.isLake(checkX, checkY) ||
+                    (board.getPiece(checkX, checkY) != null &&
+                            board.getPiece(checkX, checkY).getName().equals("Rat"))) {
+                return false;
+            }
+            checkX += directionX;
+            checkY += directionY;
         }
 
-        this.x = newX;
-        this.y = newY;
+        // Check target piece
+        Piece target = board.getPiece(targetX, targetY);
+        if (target != null && !canCapture(target, board)) {
+            return false;
+        }
+
+        // Execute the jump
+        if (target != null) board.removePiece(targetX, targetY);
+        board.updatePiecePosition(this, targetX, targetY);
         return true;
+    }
+
+    /**
+     * Checks if the Lion is at the edge of a lake, enabling a possible lake jump.
+     *
+     * @param x The row position of the Lion.
+     * @param y The column position of the Lion.
+     * @return true if the Lion is at the edge of a lake, false otherwise.
+     */
+    public boolean isLakeEdge(int x, int y) {
+        boolean northEdge = (x == 2) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // North edges (row 2) of both lakes
+        boolean southEdge = (x == 6) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // South edges (row 6) of both lakes
+        boolean westEdge = (y == 0 || y == 3) && (x >= 3 && x <= 5); // West edges (columns 0 and 3)
+        boolean eastEdge = (y == 3 || y == 6) && (x >= 3 && x <= 5); // East edges (columns 3 and 6)
+
+        return northEdge || southEdge || westEdge || eastEdge;
+    }
+
+    protected ArrayList<int[]> generateValidMoves(Board board) {
+        ArrayList<int[]> moves = new ArrayList<>();
+        int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
+
+        for (int[] dir : directions) {
+            int newX = x + dir[0];
+            int newY = y + dir[1];
+            if (isValidPosition(newX, newY, board)) {
+                moves.add(new int[]{newX, newY});
+            }
+        }
+        return moves;
     }
 
     /**
@@ -78,7 +144,7 @@ public abstract class Piece {
      * @param target The piece to capture.
      * @return True if this piece can capture the target, false otherwise.
      */
-    protected boolean canCapture(Piece target) {
+    protected boolean canCapture(Piece target, Board board) {
         return target != null && !isSamePlayer(target) && this.strength >= target.strength;
     }
 
@@ -145,7 +211,7 @@ public abstract class Piece {
      * @return The player who controls the piece.
      */
     public Player getPlayer() {
-        return player;
+        return this.player;
     }
 
     /**

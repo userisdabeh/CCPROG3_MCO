@@ -1,20 +1,20 @@
-/**
- * Represents a home base on the board.
- */
 public class HomeBase extends Terrain {
-    private final char baseSymbol;
+    // Base coordinates (fixed per Jungle game rules)
+    public static final int[] P1_BASE = {8, 3};
+    public static final int[] P2_BASE = {0, 3};
 
-    public HomeBase(char symbol) {
-        this.baseSymbol = symbol;
+    private final Player owner;
+
+    public HomeBase(Player owner) {
+        this.owner = owner;
     }
 
-    @Override
-    public char getSymbol() {
-        return baseSymbol;
+    // Get base coordinates for any player
+    public static int[] getBasePosition(Player player) {
+        return player.getName().equals("Player 1") ? P1_BASE : P2_BASE;
     }
 
-    public static void setHomeBases(Terrain[][] grid) {
-        grid[8][3] = new HomeBase('1');  // Player 1's base
-        grid[0][3] = new HomeBase('2');  // Player 2's base
+    public Player getOwner() {
+        return owner;
     }
 }

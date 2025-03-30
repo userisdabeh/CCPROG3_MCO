@@ -5,12 +5,13 @@ public class Board {
     private Terrain[][] terrain;
     private ArrayList<int[]> p1Possible;
     private ArrayList<int[]> p2Possible;
+    private Player p1, p2;
 
     public Board() {
         terrain = new Terrain[9][7];
         p1Possible = new ArrayList<>();
         p2Possible = new ArrayList<>();
-        setupTerrain();
+        setupTerrain(p1, p2);
         setupPossiblePositions();
     }
 
@@ -39,44 +40,15 @@ public class Board {
         Collections.shuffle(p2Possible);
     }
 
-    public void showPossiblePositions() {
-        System.out.println("\n=== INITIAL POSITIONS ===");
-        System.out.println("\n  0 1 2 3 4 5 6 y");
-
-        char[][] display = new char[9][7];
-
-        // Initialize with terrain
-        for(int i=0; i<9; i++) {
-            for(int j=0; j<7; j++) {
-                display[i][j] = terrain[i][j].getSymbol();
-            }
-        }
-
-        // Mark positions
-        markPositions(display, p1Possible);
-        markPositions(display, p2Possible);
-
-        for(int i=0; i<9; i++) {
-            System.out.print(i + "  ");
-            for(int j=0; j<7; j++) {
-                System.out.print(display[i][j] + " ");
-            }
-            System.out.println();
-        }
-        System.out.println("x");
-    }
-
-    private void markPositions(char[][] display, ArrayList<int[]> positions) {
-        for(int[] pos : positions) {
-            display[pos[0]][pos[1]] = '*';
-        }
-    }
-
     // Getter methods
-    public ArrayList<int[]> getP1Possible() { return p1Possible; }
-    public ArrayList<int[]> getP2Possible() { return p2Possible; }
+    public ArrayList<int[]> getP1Possible() {
+        return p1Possible;
+    }
+    public ArrayList<int[]> getP2Possible() {
+        return p2Possible;
+    }
 
-    public void setupTerrain() {
+    public void setupTerrain(Player p1, Player p2) {
         // Initialize all tiles to normal terrain first
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
@@ -95,7 +67,8 @@ public class Board {
         Trap.setTrapArea(terrain, 7, 3, 7, 3);
 
         // Setup home bases
-        HomeBase.setHomeBases(terrain);
+        terrain[HomeBase.P1_BASE[0]][HomeBase.P1_BASE[1]] = new HomeBase(p1);
+        terrain[HomeBase.P2_BASE[0]][HomeBase.P2_BASE[1]] = new HomeBase(p2);
     }
 
     /**
@@ -108,56 +81,27 @@ public class Board {
         }
     }
 
-    /**
-     * Checks if a move to (x,y) is valid.
-     */
-    public boolean isValidMove(int x, int y, Player player) {
-        if (!isValidPosition(x, y)) {
-            return false;
-        }
-
-        Terrain tile = terrain[x][y];
-        // Check if moving to own base
-        return !(("Player 1".equals(player.getName()) && x == 8 && y == 3) ||
-                ("Player 2".equals(player.getName()) && x == 0 && y == 3));
-    }
 
     /**
      * Updates a piece's position.
      */
     public void updatePiecePosition(Piece piece, int newX, int newY) {
-        if (piece == null || !isValidPosition(newX, newY)) return;
+        // Clear old position from terrain
+        int oldX = piece.getX();
+        int oldY = piece.getY();
+        if (isValidPosition(oldX, oldY)) {
+            terrain[oldX][oldY].removePiece();
+        }
 
-        // Clear old position
-        terrain[piece.getX()][piece.getY()].removePiece();
-        // Set new position
-        terrain[newX][newY].setPiece(piece);
-        piece.setPosition(newX, newY);
+        // Place piece in new position
+        placePiece(piece, newX, newY);
     }
 
     /**
      * Gets the piece at specified coordinates.
      */
     public Piece getPiece(int x, int y) {
-        if (!isValidPosition(x, y)) {
-            System.out.println("Not valid position");  // or throw exception for invalid position
-        } else {
-            System.out.println("Valid position: " + x + ", " + y);
-        }
         return isValidPosition(x, y) ? terrain[x][y].getPiece() : null;
-    }
-
-    /**
-     * Gets the terrain type at specified coordinates
-     * @param x X coordinate (row)
-     * @param y Y coordinate (column)
-     * @return Terrain object at position
-     */
-    public Terrain getTerrain(int x, int y) {
-        if (isValidPosition(x, y)) {
-            return terrain[x][y];
-        }
-        return null;  // or throw exception for invalid position
     }
 
     /**
@@ -172,6 +116,16 @@ public class Board {
      */
     public boolean isTrap(int x, int y) {
         return isValidPosition(x, y) && terrain[x][y] instanceof Trap;
+    }
+
+    public boolean isBase(int x, int y) {
+        return terrain[x][y] instanceof HomeBase;
+    }
+
+    public boolean isOwnBase(int x, int y, Player player) {
+        if (!isBase(x, y)) return false;
+        HomeBase base = (HomeBase) terrain[x][y];
+        return base.getOwner().equals(player);
     }
 
     /**
@@ -194,27 +148,5 @@ public class Board {
             }
         }
     }
-
-    /**
-     * Displays the board state.
-     */
-    public void displayBoard() {
-        System.out.println("\n=== JUNGLE KING ===");
-        System.out.println("\n   0 1 2 3 4 5 6 y");
-        for (int i = 0; i < 9; i++) {
-            System.out.print(i + "  ");
-            for (int j = 0; j < 7; j++) {
-                Terrain tile = terrain[i][j];
-                if (tile.hasPiece()) {
-                    System.out.print(tile.getPiece().getName().charAt(0) + " ");
-                } else {
-                    System.out.print(tile.getSymbol() + " ");
-                }
-            }
-            System.out.println();
-        }
-        System.out.println("x");
-    }
-
 
 }

@@ -1,6 +1,6 @@
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.*;
 
 public class GamePanelController implements ActionListener {
     private final JungleKing jungleKing;
@@ -26,12 +26,6 @@ public class GamePanelController implements ActionListener {
         if (jungleKing.getSelectingPlayer() != 0) {
             // Handle initial position selection
             boolean selectionComplete = jungleKing.handleStartingPosition(row, col);
-
-            // Update the player name label based on the current player selecting
-            if(jungleKing.selectingPlayer == 2) {
-                view.playerName.setText("Player 2: Select starting position");
-            }
-
             if (selectionComplete) {
                 SwingUtilities.invokeLater(() -> {
                     view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + " goes first!");
@@ -54,19 +48,24 @@ public class GamePanelController implements ActionListener {
             }
         } else {
             // Move piece
-            System.out.println("Moving piece: " + selectedPiece.getName() + " to (" + row + ", " + col + ")");
             boolean moveSuccess = selectedPiece.move(row, col, jungleKing.getBoard());
-            System.out.println("Move success: " + moveSuccess);
             if (moveSuccess) {
-                view.updateAllAnimalIcons();
-                jungleKing.switchTurn();
-                view.updatePlayerDisplay(currentPlayer.getName() + "'s turn");
-                view.updateAllAnimalIcons();
-            } else {
-                // Invalid move - show error
-                System.out.println("Cannot move to occupied friendly tile!");
-            }
+                if (jungleKing.isWinningMove(row, col, currentPlayer)) {
+                    view.showWinner(currentPlayer.getName());
+                    jungleKing.setGameOver(true);
+                    return;
+                }
 
+                if (jungleKing.checkOpponentDefeated(currentPlayer)) {
+                    view.showWinner(currentPlayer.getName());
+                    jungleKing.setGameOver(true);
+                    return;
+                }
+
+                jungleKing.switchTurn();
+                view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + "'s turn");
+                view.updateAllAnimalIcons();
+            }
             selectedPiece = null;
             view.clearHighlights();
         }

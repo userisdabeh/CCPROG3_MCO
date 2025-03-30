@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Represents the Wolf piece in the game.
@@ -16,6 +17,11 @@ public class Wolf extends Piece {
         super("Wolf", 4, x, y);
     }
 
+    @Override
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return generateValidMoves(board);
+    }
+
     /**
      * Attempts to move the Wolf to the new position.
      * 
@@ -26,19 +32,7 @@ public class Wolf extends Piece {
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
-        int dx = newX - x;
-        int dy = newY - y;
-
-        if (!board.isValidPosition(newX, newY)) {
-            return false;
-        }
-
-        // Only allow straight line movement
-        if (dx != 0 && dy != 0) {
-            return false;
-        }
-
-        board.updatePiecePosition(this, newX, newY);
-        return true;
+        if (board.isLake(newX, newY)) return false;
+        return basicMove(newX, newY, board);
     }
 }

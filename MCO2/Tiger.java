@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 
 /**
  * Represents the Tiger piece in the game.
@@ -16,42 +17,25 @@ public class Tiger extends Piece {
         super("Tiger", 6, x, y);
     }
 
-    /**
-     * Attempts to move the Tiger to the new position.
-     * 
-     * @param newX The new row position of the Tiger.
-     * @param newY The new column position of the Tiger.
-     * @param board The game board.
-     * @return false since the Tiger cannot yet move.
-     */
     @Override
-    public boolean move(int newX, int newY, Board board) {
-        return false; // Cannot move
+    public ArrayList<int[]> getValidMoves(Board board) {
+        return generateValidMoves(board);
     }
 
     /**
-     * Handles the Lion's normal movement. 
-     * If the lion is attempting to jump over the lake but there is a rat in the way, the move is invalid.
-     * 
-     * @param newX The new row position of the Lion.
-     * @param newY The new column position of the Lion.
-     * @param board The game board.
-     * @return true if the Lion successfully moves to the new position, false otherwise.
+     * Attempts to move the Lion to the new position.
+     * The Lion can jump over the lake if no rats are in the way.
+     * The Lion can only move orthogonally.
      */
-    public boolean normalMove(int newX, int newY, Board board) {
-        if(board.isLake(newX, newY)) {
-            return false;
-        }
-        
-        Piece target = board.getPiece(newX, newY);
-        if (target != null && !canCapture(target)) {
-            return false;
-        }
+    @Override
+    public boolean move(int newX, int newY, Board board) {
+        int dx = newX - x;
+        int dy = newY - y;
 
-        if (target != null) {
-            board.removePiece(newX, newY);
-        }
-        board.updatePiecePosition(this, newX, newY);
-        return true;
+        // Try lake jump first
+        if (handleLakeJump(dx, dy, board)) return true;
+
+        // Normal move
+        return basicMove(newX, newY, board) && !board.isLake(newX, newY);
     }
 }
