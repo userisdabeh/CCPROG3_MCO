@@ -10,6 +10,8 @@ public abstract class Piece {
     protected int strength;
     protected int x, y;
     protected Player player;
+    protected int trapStrength = 0; // Default strength of animal when on trap
+    protected int defaultStrength;
 
     /**
      * Constructs a Piece with a given name, strength, and initial position.
@@ -21,7 +23,8 @@ public abstract class Piece {
      */
     public Piece(String name, int strength, int x, int y) {
         this.name = name;
-        this.strength = strength;
+        defaultStrength = strength;
+        this.strength = defaultStrength;
         this.x = x;
         this.y = y;
     }
@@ -65,6 +68,7 @@ public abstract class Piece {
 
         // Update position
         if (target != null) board.removePiece(newX, newY);
+
         board.updatePiecePosition(this, newX, newY);
         return true;
     }
@@ -203,6 +207,10 @@ public abstract class Piece {
      */
     public int getStrength() {
         return strength;
+    }
+
+    public int getDefaultStrength() {
+        return defaultStrength;
     }
 
     /**
