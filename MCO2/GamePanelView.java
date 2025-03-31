@@ -114,14 +114,14 @@ public class GamePanelView {
             }
         }
 
-        // Redraw all pieces
-        setPlayerIcons(jungleKing.getPlayer1(), 1);
-        setPlayerIcons(jungleKing.getPlayer2(), 2);
-
         // Redraw terrain
         lakeView.addLakeIcons(board, boardTiles);
         trapView.addTrapIcons(board, boardTiles);
         homeBaseView.addDenIcons(board, boardTiles);
+
+        // Redraw all pieces
+        setPlayerIcons(jungleKing.getPlayer1(), 1);
+        setPlayerIcons(jungleKing.getPlayer2(), 2);
 
         mainPanel.revalidate();
         mainPanel.repaint();
