@@ -26,6 +26,11 @@ public class GamePanelController implements ActionListener {
         if (jungleKing.getSelectingPlayer() != 0) {
             // Handle initial position selection
             boolean selectionComplete = jungleKing.handleStartingPosition(row, col);
+
+            if (jungleKing.selectingPlayer == 2) {
+                view.playerName.setText("Player 2: Select starting position");
+            }
+
             if (selectionComplete) {
                 SwingUtilities.invokeLater(() -> {
                     view.updatePlayerDisplay(jungleKing.getCurrentPlayerName() + " goes first!");
@@ -67,15 +72,15 @@ public class GamePanelController implements ActionListener {
                 if (jungleKing.getBoard().isTrap(row, col)) {
                     if ((row == 8 && col == 2) || (row == 8 && col == 4) || (row == 7 && col == 3)) {
                         if (currentPlayer != jungleKing.getPlayer1()) {
-                            System.out.println("Current piece strength: " + selectedPiece.strength);
+                            //System.out.println("Current piece strength: " + selectedPiece.strength);
                             selectedPiece.strength = selectedPiece.trapStrength;
-                            System.out.println("New piece strength: " + selectedPiece.strength);
+                            //System.out.println("New piece strength: " + selectedPiece.strength);
                         }
                     } else if ((row == 0 && col == 2) || (row == 0 && col == 4) || (row == 1 && col == 3)) {
                         if (currentPlayer != jungleKing.getPlayer2()) {
-                            System.out.println("Current piece strength: " + selectedPiece.strength);
+                            //System.out.println("Current piece strength: " + selectedPiece.strength);
                             selectedPiece.strength = selectedPiece.trapStrength;
-                            System.out.println("New piece strength: " + selectedPiece.strength);
+                            //System.out.println("New piece strength: " + selectedPiece.strength);
                         }
                     }
                 }
