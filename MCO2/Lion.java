@@ -31,8 +31,8 @@ public class Lion extends Piece {
         int dx = newX - x;
         int dy = newY - y;
 
-        // Try lake jump first
-        if (handleLakeJump(dx, dy, board)) return true;
+        if (board.isLake(newX, newY) && isLakeEdge(x, y))
+            return handleLakeJump(dx, dy, board);
 
         // Normal move
         return basicMove(newX, newY, board) && !board.isLake(newX, newY);

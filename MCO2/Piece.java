@@ -74,12 +74,17 @@ public abstract class Piece {
     }
 
     protected boolean handleLakeJump(int dx, int dy, Board board) {
-        if (!isLakeEdge(x, y)) return false;
-
         int directionX = Integer.signum(dx);
         int directionY = Integer.signum(dy);
         int targetX = x + (4 * directionX);
         int targetY = y + (3 * directionY);
+        int numberOfSteps = 0;
+
+        if (directionY == 0) {
+            numberOfSteps = 3;
+        } else 
+            numberOfSteps = 2;
+
 
         // Validate target position
         if (!board.isValidPosition(targetX, targetY) || board.isLake(targetX, targetY)) {
@@ -89,7 +94,7 @@ public abstract class Piece {
         // Check intermediate tiles
         int checkX = x + directionX;
         int checkY = y + directionY;
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < numberOfSteps; i++) {
             if (!board.isLake(checkX, checkY) ||
                     (board.getPiece(checkX, checkY) != null &&
                             board.getPiece(checkX, checkY).getName().equals("Rat"))) {
@@ -106,17 +111,18 @@ public abstract class Piece {
         }
 
         // Execute the jump
-        if (target != null) board.removePiece(targetX, targetY);
+        if (target != null) board.removePiece(targetX, targetY);    
+        
         board.updatePiecePosition(this, targetX, targetY);
         return true;
     }
 
     /**
-     * Checks if the Lion is at the edge of a lake, enabling a possible lake jump.
+     * Checks if the Lion or Tiger is at the edge of a lake, enabling a possible lake jump.
      *
-     * @param x The row position of the Lion.
-     * @param y The column position of the Lion.
-     * @return true if the Lion is at the edge of a lake, false otherwise.
+     * @param x The row position of the Lion/Tiger.
+     * @param y The column position of the Lion/Tiger.
+     * @return true if the Lion/Tiger is at the edge of a lake, false otherwise.
      */
     public boolean isLakeEdge(int x, int y) {
         boolean northEdge = (x == 2) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // North edges (row 2) of both lakes
