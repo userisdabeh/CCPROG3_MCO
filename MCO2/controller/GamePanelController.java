@@ -149,6 +149,13 @@ public class GamePanelController implements ActionListener {
         return null;
     }
 
+    /**
+     * Validates move attempts against game rules. Checks:
+     * <ul>
+     *  <li>Own base check</li>
+     *  <li>Lake entry check</li>
+     * </ul>
+     */
     private boolean validateMove(Piece piece, int newX, int newY) {
         Board board = jungleKing.getBoard();
 

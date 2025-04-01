@@ -83,6 +83,7 @@ public abstract class Piece {
      *   <li>Board boundary validation</li>
      *   <li>Own base restriction</li>
      *   <li>Capture validation via {@link #canCapture(Piece, Board)}</li>
+     *   <li>Trap effect handling</li>
      * </ol>
      * 
      * @param newX  Target row coordinate

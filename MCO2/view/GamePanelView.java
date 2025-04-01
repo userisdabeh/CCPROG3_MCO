@@ -1,10 +1,9 @@
 package view;
 
+import controller.*;
 import java.awt.*;
 import javax.swing.*;
-
 import model.*;
-import controller.*;
 
 /**
  * GamePanelView class is responsible for rendering the game board and its components.
@@ -280,6 +279,11 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Displays an error message indicating an invalid move.
+     * 
+     * @param message The error message to display.
+     */
     public void showErrorMessage(String message) {
         Component frame = null;
         JOptionPane.showMessageDialog(
