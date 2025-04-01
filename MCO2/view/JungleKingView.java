@@ -1,5 +1,11 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import model.*;
+import controller.*;
+
 
 /**
  * Main view class for the Jungle King game.

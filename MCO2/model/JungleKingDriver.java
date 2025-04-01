@@ -1,3 +1,8 @@
+package model;
+
+import controller.*;
+import view.*;
+
 /**
  * Main entry point for the JungleKing Application.
  * Initializes the game board, view, and controller.

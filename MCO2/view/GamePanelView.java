@@ -1,5 +1,10 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import model.*;
+import controller.*;
 
 /**
  * GamePanelView class is responsible for rendering the game board and its components.

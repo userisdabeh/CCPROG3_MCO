@@ -1,5 +1,9 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import model.*;
 
 /**
  * HomeBaseView class is responsible for displaying the home base icons on the game board.

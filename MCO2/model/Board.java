@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -85,10 +87,10 @@ public class Board {
         Lake.setLakeArea(terrain, 3, 4, 5, 5);
 
         // Setup traps
-        Trap.setTrapArea(terrain, 0, 2, 0, 4);
-        Trap.setTrapArea(terrain, 1, 3, 1, 3);
-        Trap.setTrapArea(terrain, 8, 2, 8, 4);
-        Trap.setTrapArea(terrain, 7, 3, 7, 3);
+        Trap.setTrapArea(terrain, 0, 2, 0, 4, p2);
+        Trap.setTrapArea(terrain, 1, 3, 1, 3, p2);
+        Trap.setTrapArea(terrain, 8, 2, 8, 4, p1);
+        Trap.setTrapArea(terrain, 7, 3, 7, 3, p1);
 
         // Setup home bases
         terrain[HomeBase.P1_BASE[0]][HomeBase.P1_BASE[1]] = new HomeBase(p1);
@@ -138,6 +140,19 @@ public class Board {
      */
     public Piece getPiece(int x, int y) {
         return isValidPosition(x, y) ? terrain[x][y].getPiece() : null;
+    }
+
+    /**
+     * Gets the terrain type at specified coordinates
+     * @param x X coordinate (row)
+     * @param y Y coordinate (column)
+     * @return Terrain object at position
+     */
+    public Terrain getTerrain(int x, int y) {
+        if (isValidPosition(x, y)) {
+            return terrain[x][y];
+        }
+        return null;  // or throw exception for invalid position
     }
 
     /**

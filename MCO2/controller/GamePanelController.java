@@ -1,6 +1,11 @@
+package controller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
+
+import model.*;
+import view.*;
 
 /**
  * Controller for the GamePanelView in the Jungle King game.
@@ -99,20 +104,6 @@ public class GamePanelController implements ActionListener {
                     view.showWinner(currentPlayer.getName());
                     jungleKing.setGameOver(true); // end game
                     return;
-                }
-
-                selectedPiece.strength = selectedPiece.defaultStrength; // Reset strength after move
-
-                if (jungleKing.getBoard().isTrap(row, col)) {
-                    if ((row == 8 && col == 2) || (row == 8 && col == 4) || (row == 7 && col == 3)) {
-                        if (currentPlayer != jungleKing.getPlayer1()) {
-                            selectedPiece.strength = selectedPiece.trapStrength;
-                        }
-                    } else if ((row == 0 && col == 2) || (row == 0 && col == 4) || (row == 1 && col == 3)) {
-                        if (currentPlayer != jungleKing.getPlayer2()) {
-                            selectedPiece.strength = selectedPiece.trapStrength;
-                        }
-                    }
                 }
 
                 jungleKing.switchTurn();

@@ -1,3 +1,4 @@
+package model;
 /**
  * Represents a lake terrain on the JungleKing Game.
  * Extends the {@link Terrain} class.

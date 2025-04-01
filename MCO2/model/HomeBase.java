@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents a player's home base terrain in the JungleKing game.
  * Each player's base has fixed coordinates.

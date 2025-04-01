@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 /**
@@ -113,6 +115,19 @@ public abstract class Piece {
         // Update position
         if (target != null) {
             board.removePiece(newX, newY);
+        }
+
+        // Reset strength to default before checking new position
+        this.strength = this.defaultStrength;
+
+        // Check if new position is a trap
+        Terrain terrain = board.getTerrain(newX, newY);
+        if (terrain instanceof Trap) {
+            Trap trap = (Trap) terrain;
+            // If the trap has an owner and it's not this piece's owner, weaken the piece
+            if (trap.getOwner() != null && !trap.getOwner().equals(this.player)) {
+                this.strength = this.trapStrength;
+            }
         }
 
         board.updatePiecePosition(this, newX, newY);

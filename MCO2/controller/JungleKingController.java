@@ -1,5 +1,10 @@
+package controller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+
+import model.*;
+import view.*;
 
 /**
  * Controller component for the Jungle King game.

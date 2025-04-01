@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents normal terrain on the board.
  */

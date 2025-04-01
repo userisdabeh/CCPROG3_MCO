@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents a terrain tile on the board that can contain a game piece.
  */

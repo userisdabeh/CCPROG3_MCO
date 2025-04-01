@@ -1,3 +1,5 @@
+package model;
+
 import java.util.*;
 
 /**
@@ -240,7 +242,6 @@ public class JungleKing {
      * 
      * @return The name of the current player.
      */
-
     public String getCurrentPlayerName() {
         return currentPlayer.getName();
     }

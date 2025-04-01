@@ -1,5 +1,9 @@
+package view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import model.*;
 
 /**
  * Handles visual representation of traps on the game board.

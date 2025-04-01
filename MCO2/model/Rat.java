@@ -1,3 +1,5 @@
+package model;
+
 import java.util.ArrayList;
 
 /**
@@ -71,8 +73,12 @@ public class Rat extends Piece {
 
             // Special rat vs rat in water rules
             if (target instanceof Rat) {
-                if (!board.isLake(target.getX(), target.getY())) return false;
-                if (strength < target.getStrength()) return false;
+                if (!board.isLake(target.getX(), target.getY())) {
+                    return false;
+                }
+                if (strength < target.getStrength()) {
+                    return false;
+                }
             }
             // Can't capture non-rats in water
             else {
