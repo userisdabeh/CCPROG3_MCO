@@ -54,13 +54,17 @@ public class Board {
      * Returns the list of possible starting positions for Player 1.
      * @return ArrayList of possible positions for Player 1.
      */
-    public ArrayList<int[]> getP1Possible() { return p1Possible; }
+    public ArrayList<int[]> getP1Possible() {
+        return p1Possible;
+    }
 
     /**
      * Returns the list of possible starting positions for Player 2.
      * @return ArrayList of possible positions for Player 2.
      */
-    public ArrayList<int[]> getP2Possible() { return p2Possible; }
+    public ArrayList<int[]> getP2Possible() {
+        return p2Possible;
+    }
 
     /**
      * Initializes the terrain of the board with lakes, traps, and home bases.

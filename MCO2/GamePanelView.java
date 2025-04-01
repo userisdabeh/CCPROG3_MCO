@@ -21,7 +21,7 @@ public class GamePanelView {
     // Animal icons
     ImageIcon tigerGreen, tigerBlue, lionGreen, lionBlue, elephantGreen, elephantBlue;
     ImageIcon catGreen, catBlue, dogGreen, dogBlue, wolfGreen, wolfBlue;
-    ImageIcon leopardGreen, leopardBlue, ratGreen, ratBlue, trap, denBlue, denGreen, lake, genIcon;
+    ImageIcon leopardGreen, leopardBlue, ratGreen, ratBlue, genIcon;
 
     /**
      * Constructs the GamePanelView and initializes UI components for the guessing of piece.
@@ -38,7 +38,7 @@ public class GamePanelView {
      */
     private void initializeComponents() {
         mainPanel.setLayout(new BorderLayout());
-        gameP.setBackground(Color.decode("#B2FBA5"));
+        gameP.setBackground(Color.decode("#FAF9F6"));
         gameP.setLayout(new BoxLayout(gameP, BoxLayout.Y_AXIS));
 
         currentPlayerLabel.setFont(new Font("Helvetica", Font.BOLD, 20));
@@ -105,7 +105,7 @@ public class GamePanelView {
             ratBlue = createScaledIcon("./img/rat-blue.png");
             genIcon = createScaledIcon("./img/shou2025.png");
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // only if image is not found within files
         }
     }
 
@@ -154,16 +154,9 @@ public class GamePanelView {
         setPlayerIcons(jungleKing.getPlayer1(), 1);
         setPlayerIcons(jungleKing.getPlayer2(), 2);
 
+        // to refresh the display when changes are made
         mainPanel.revalidate();
         mainPanel.repaint();
-    }
-
-    /**
-     * Clears the icons from the possible positions on the board to replace by actual icons for game start.
-     */
-    private void clearGenIcons() {
-        for (int[] pos : board.getP1Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
-        for (int[] pos : board.getP2Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
     }
 
     /**
@@ -206,7 +199,9 @@ public class GamePanelView {
      * 
      * @return The main JPanel for the game that contains all panels.
      */
-    public JPanel getMainPanel() { return mainPanel; }
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
 
     /**
      * Sets the controller for the game panel, allowing it to handle button clicks.
@@ -247,8 +242,7 @@ public class GamePanelView {
 
     /**
      * Highlights the tile where the piece is currently located.
-     * 
-     * @param piece The piece whose current position is to be highlighted.
+     *
      */
     public void clearHighlights() {
         for (JButton[] row : boardTiles) {
@@ -279,5 +273,15 @@ public class GamePanelView {
                 tile.setEnabled(false);
             }
         }
+    }
+
+    public void showErrorMessage(String message) {
+        Component frame = null;
+        JOptionPane.showMessageDialog(
+                frame,
+                message,
+                "Invalid Move",
+                JOptionPane.WARNING_MESSAGE
+        );
     }
 }

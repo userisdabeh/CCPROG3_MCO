@@ -10,7 +10,7 @@ import java.util.*;
  * 
  */
 public class JungleKing {
-    private Board board1;
+    private Board board;
     private Player player1;
     private Player player2;
     private Player currentPlayer;
@@ -28,9 +28,9 @@ public class JungleKing {
      * @param board The game board used for the game.
      */
     public JungleKing(Board board) {
-        board1 = board;  // Now initializes possible positions internally
+        this.board = board;  // Now initializes possible positions internally
         createPlayers();
-        board1.setupTerrain(player1, player2);
+        this.board.setupTerrain(player1, player2);
         placePiecesOnBoard(player1);
         placePiecesOnBoard(player2);
     }
@@ -39,8 +39,8 @@ public class JungleKing {
      * Creates player instances with pieces positioned according to defined possible locations.
      */
     public void createPlayers() {
-        player1 = new Player("Player 1", createPieces(board1.getP1Possible()));
-        player2 = new Player("Player 2", createPieces(board1.getP2Possible()));
+        player1 = new Player("Player 1", createPieces(board.getP1Possible()));
+        player2 = new Player("Player 2", createPieces(board.getP2Possible()));
     }
 
     /**
@@ -75,19 +75,19 @@ public class JungleKing {
      */
     public boolean handleStartingPosition(int row, int col) {
         if (selectingPlayer == 1) {
-            if (isValidSelection(row, col, board1.getP1Possible())) {
+            if (isValidSelection(row, col, board.getP1Possible())) {
                 player1Selection = new int[]{row, col};
-                selectingPlayer = 2;
-                return false;
+                selectingPlayer = 2; // move to Player 2
+                return false; // set to false since Player 2 is not done selecting
             } else {
                 return false;
             }
         } else if (selectingPlayer == 2) {
-            if (isValidSelection(row, col, board1.getP2Possible())) {
+            if (isValidSelection(row, col, board.getP2Possible())) {
                 player2Selection = new int[]{row, col};
-                selectingPlayer = 0;
+                selectingPlayer = 0; // default
                 determineFirstPlayer();
-                return true;
+                return true; // both players are done selecting
             } else {
                 return false;
             }
@@ -115,14 +115,18 @@ public class JungleKing {
      * 
      * @return The current player.
      */
-    public Player getCurrentPlayer() { return currentPlayer; }
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
 
     /**
      * Returns the board being used in the game.
      * 
      * @return The game board.
      */
-    public Board getBoard() { return board1; }
+    public Board getBoard() {
+        return board;
+    }
 
     /**
      * Determines the first player based on the strength of the selected pieces.
@@ -161,7 +165,7 @@ public class JungleKing {
      */
     private void placePiecesOnBoard(Player player) {
         for (Piece piece : player.getPieces()) {
-            board1.placePiece(piece, piece.getX(), piece.getY());
+            board.placePiece(piece, piece.getX(), piece.getY());
             piece.setPlayer(player);
         }
     }
@@ -218,14 +222,18 @@ public class JungleKing {
      * 
      * @return Player 1 instance
      */
-    public Player getPlayer1() { return player1; }
+    public Player getPlayer1() {
+        return player1;
+    }
 
     /**
      * Returns the Player 2 object
      * 
      * @return Player 2 instance
      */
-    public Player getPlayer2() { return player2; }
+    public Player getPlayer2() {
+        return player2;
+    }
 
     /**
      * Returns the current player name.
@@ -233,12 +241,16 @@ public class JungleKing {
      * @return The name of the current player.
      */
 
-    public String getCurrentPlayerName() { return currentPlayer.getName(); }
+    public String getCurrentPlayerName() {
+        return currentPlayer.getName();
+    }
 
     /**
      * Returns the Selecting Player Number.
      * 
      * @return The selecting player (1 or 2).
      */
-    public int getSelectingPlayer() { return selectingPlayer; }
+    public int getSelectingPlayer() {
+        return selectingPlayer;
+    }
 }

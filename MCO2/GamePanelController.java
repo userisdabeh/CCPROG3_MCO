@@ -81,18 +81,23 @@ public class GamePanelController implements ActionListener {
                 view.highlightValidMoves(selectedPiece);
             }
         } else {
+            // Validate move first
+            if (!validateMove(selectedPiece, row, col)) {
+                return; // Don't proceed if validation fails
+            }
+
             // Move piece
             boolean moveSuccess = selectedPiece.move(row, col, jungleKing.getBoard());
             if (moveSuccess) {
                 if (jungleKing.isWinningMove(row, col, currentPlayer)) {
                     view.showWinner(currentPlayer.getName());
-                    jungleKing.setGameOver(true);
+                    jungleKing.setGameOver(true); // end game
                     return;
                 }
 
                 if (jungleKing.checkOpponentDefeated(currentPlayer)) {
                     view.showWinner(currentPlayer.getName());
-                    jungleKing.setGameOver(true);
+                    jungleKing.setGameOver(true); // end game
                     return;
                 }
 
@@ -101,15 +106,11 @@ public class GamePanelController implements ActionListener {
                 if (jungleKing.getBoard().isTrap(row, col)) {
                     if ((row == 8 && col == 2) || (row == 8 && col == 4) || (row == 7 && col == 3)) {
                         if (currentPlayer != jungleKing.getPlayer1()) {
-                            //System.out.println("Current piece strength: " + selectedPiece.strength);
                             selectedPiece.strength = selectedPiece.trapStrength;
-                            //System.out.println("New piece strength: " + selectedPiece.strength);
                         }
                     } else if ((row == 0 && col == 2) || (row == 0 && col == 4) || (row == 1 && col == 3)) {
                         if (currentPlayer != jungleKing.getPlayer2()) {
-                            //System.out.println("Current piece strength: " + selectedPiece.strength);
                             selectedPiece.strength = selectedPiece.trapStrength;
-                            //System.out.println("New piece strength: " + selectedPiece.strength);
                         }
                     }
                 }
@@ -155,6 +156,26 @@ public class GamePanelController implements ActionListener {
             }
         }
         return null;
+    }
+
+    private boolean validateMove(Piece piece, int newX, int newY) {
+        Board board = jungleKing.getBoard();
+
+        // Own base check
+        if (board.isOwnBase(newX, newY, piece.getPlayer())) {
+            view.showErrorMessage("You cannot move into your own base!");
+            return false;
+        }
+
+        // Piece-specific validation
+        if (board.isLake(newX, newY)) {
+            if (!(piece instanceof Lion) && !(piece instanceof Tiger) && !(piece instanceof Rat)) {
+                view.showErrorMessage("This piece cannot enter the lake!");
+                return false;
+            }
+        }
+
+        return true;
     }
 }
 

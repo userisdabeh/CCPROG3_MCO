@@ -11,7 +11,7 @@ public class JungleKingView {
     private JPanel menuPanel = new JPanel();
     private JLabel landingLabel = new JLabel("Welcome to Jungle King!");
     private JButton landingButton = new JButton("Start Game");
-    private Font font = new Font("Helvetica", Font.BOLD, 30);
+    private Font font = new Font("Helvetica", Font.BOLD, 27);
     private final JungleKing jungleKing;
 
     /**
@@ -29,12 +29,12 @@ public class JungleKingView {
      * 
      */
     private void initializeFrame() {
-        frame.setSize(400, 600);
+        frame.setSize(500, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
         frame.setLocationRelativeTo(null);
 
-        menuPanel.setBackground(Color.decode("#B2FBA5"));
+        menuPanel.setBackground(Color.decode("#FAF9F6"));
         menuPanel.setLayout(new BoxLayout(menuPanel, BoxLayout.Y_AXIS));
 
         landingLabel.setFont(font);
@@ -74,7 +74,9 @@ public class JungleKingView {
      * 
      * @return The landing button used to start the game.
      */
-    public JButton getLandingButton() { return landingButton; }
+    public JButton getLandingButton() {
+        return landingButton;
+    }
     
     /**
      * Sets the controller used to handle button actions.

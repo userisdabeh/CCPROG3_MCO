@@ -90,20 +90,30 @@ public abstract class Piece {
      */
     protected boolean basicMove(int newX, int newY, Board board) {
         // Validate 1-step movement
-        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) return false;
+        if (Math.abs(newX - x) + Math.abs(newY - y) != 1) {
+            return false;
+        }
 
         // Check board boundaries
-        if (!board.isValidPosition(newX, newY)) return false;
+        if (!board.isValidPosition(newX, newY)) {
+            return false;
+        }
 
         // Prevent moving to own base
-        if (board.isOwnBase(newX, newY, player)) return false;
+        if (board.isOwnBase(newX, newY, player)) {
+            return false;
+        }
 
         // Handle captures
         Piece target = board.getPiece(newX, newY);
-        if (target != null && !canCapture(target, board)) return false;
+        if (target != null && !canCapture(target, board)) {
+            return false;
+        }
 
         // Update position
-        if (target != null) board.removePiece(newX, newY);
+        if (target != null) {
+            board.removePiece(newX, newY);
+        }
 
         board.updatePiecePosition(this, newX, newY);
         return true;
@@ -127,7 +137,7 @@ public abstract class Piece {
 
         if (directionY == 0) {
             numberOfSteps = 3;
-        } else 
+        } else
             numberOfSteps = 2;
 
 
@@ -140,9 +150,7 @@ public abstract class Piece {
         int checkX = x + directionX;
         int checkY = y + directionY;
         for (int i = 0; i < numberOfSteps; i++) {
-            if (!board.isLake(checkX, checkY) ||
-                    (board.getPiece(checkX, checkY) != null &&
-                            board.getPiece(checkX, checkY).getName().equals("Rat"))) {
+            if (!board.isLake(checkX, checkY) || (board.getPiece(checkX, checkY) != null && board.getPiece(checkX, checkY).getName().equals("Rat"))) {
                 return false;
             }
             checkX += directionX;
@@ -198,7 +206,7 @@ public abstract class Piece {
             int newX = x + dir[0];
             int newY = y + dir[1];
             if (isValidPosition(newX, newY, board)) {
-                moves.add(new int[]{newX, newY});
+                moves.add(new int[]{newX, newY}); // add to list of possible moves
             }
         }
         return moves;
@@ -275,10 +283,6 @@ public abstract class Piece {
      */
     public int getStrength() {
         return strength;
-    }
-
-    public int getDefaultStrength() {
-        return defaultStrength;
     }
 
     /**

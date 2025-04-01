@@ -43,21 +43,6 @@ public class Player {
     }
 
     /**
-     * Returns the piece with the specified name.
-     *
-     * @param pieceName The name of the piece to retrieve.
-     * @return The piece with the specified name, or null if not found.
-     */
-    public Piece getPiece(String pieceName) {
-        for (Piece piece : pieces) {
-            if (piece.getName().equalsIgnoreCase(pieceName)) {
-                return piece;
-            }
-        }
-        return null;
-    }
-
-    /**
      * Adds a piece to the player's list of pieces.
      *
      * @param piece The piece to add.
