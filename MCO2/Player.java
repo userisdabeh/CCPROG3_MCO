@@ -10,7 +10,8 @@ public class Player {
     private ArrayList<Piece> pieces;
 
     /**
-     * Constructor for the Player class.
+     * Constructs a new Player with the specified name and pieces.
+     * 
      * @param name The name of the player.
      * @param pieces The list of pieces owned by the player.
      */

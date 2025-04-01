@@ -2,14 +2,15 @@ import java.util.ArrayList;
 
 /**
  * Represents the Wolf piece in the game.
- * The Wolf has a strength of 4 and is a subclass of Piece.
- * 
- * Currently, the Wolf class is not implemented and always returns false.
+ * The Wolf has a strength of 5.
+ * Extends the {@link Piece} class.
+ * The Wolf can move to any adjacent square, including diagonally.
  */
 public class Wolf extends Piece {
 
     /**
-     * Constructor for the Wolf class at the specified position.
+     * Constructor for the wolf class at the specified position.
+     * 
      * @param x The row position of the wolf on the board.
      * @param y The column position of the wolf on the board,
      */
@@ -17,6 +18,12 @@ public class Wolf extends Piece {
         super("Wolf", 4, x, y);
     }
 
+    /**
+     * Generates a list of valid moves for the wolf piece.
+     * 
+     * @param board The game board.
+     * @return A list of valid moves for the wolf piece.
+     */
     @Override
     public ArrayList<int[]> getValidMoves(Board board) {
         return generateValidMoves(board);
@@ -28,7 +35,7 @@ public class Wolf extends Piece {
      * @param newX The new row position of the Wolf.
      * @param newY The new column position of the Wolf.
      * @param board The game board.
-     * @return false since the Wolf cannot yet move.
+     * @return {@code true} if the move is successful, {@code false} if the move is invalid.
      */
     @Override
     public boolean move(int newX, int newY, Board board) {

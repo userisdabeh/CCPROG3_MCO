@@ -1,6 +1,10 @@
 import java.awt.*;
 import javax.swing.*;
 
+/**
+ * GamePanelView class is responsible for rendering the game board and its components.
+ * It initializes the game board, sets up the player icons, and handles user interactions.
+ */
 public class GamePanelView {
     public Board board = new Board();
     private LakeView lakeView = new LakeView();
@@ -19,11 +23,19 @@ public class GamePanelView {
     ImageIcon catGreen, catBlue, dogGreen, dogBlue, wolfGreen, wolfBlue;
     ImageIcon leopardGreen, leopardBlue, ratGreen, ratBlue, trap, denBlue, denGreen, lake, genIcon;
 
+    /**
+     * Constructs the GamePanelView and initializes UI components for the guessing of piece.
+     * 
+     * @param jungleKing The JungleKing instance that manages the game state.
+     */
     public GamePanelView(JungleKing jungleKing) {
         this.jungleKing = jungleKing;
         initializeComponents();
     }
 
+    /**
+     * Initializes the UI components for the game board and player display.
+     */
     private void initializeComponents() {
         mainPanel.setLayout(new BorderLayout());
         gameP.setBackground(Color.decode("#B2FBA5"));
@@ -52,6 +64,9 @@ public class GamePanelView {
         mainPanel.add(boardP, BorderLayout.CENTER);
     }
 
+    /**
+     * Creates the game board tiles and adds them to the board panel as buttons.
+     */
     private void createBoardTiles() {
         boardP.setLayout(new GridLayout(9, 7, 2, 2));
         for (int i = 0; i < 9; i++) {
@@ -66,6 +81,10 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Initializes the animal icons used in the game.
+     * This method loads the images from the resources and scales them to a uniform size.
+     */
     private void initImages() {
         try {
             tigerGreen = createScaledIcon("./img/tiger-green.png");
@@ -90,11 +109,20 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Creates a scaled icon from the given image path.
+     * 
+     * @param path The path to the image resource.
+     * @return A scaled ImageIcon.
+     */
     private ImageIcon createScaledIcon(String path) {
         Image image = new ImageIcon(getClass().getResource(path)).getImage();
         return new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
     }
 
+    /**
+     * Adds icons to the possible positions on the board for both players.
+     */
     private void addIconsToPositions() {
         for (int[] pos : board.getP1Possible()) {
             boardTiles[pos[0]][pos[1]].setIcon(genIcon);
@@ -107,6 +135,9 @@ public class GamePanelView {
         homeBaseView.addDenIcons(board, boardTiles);
     }
 
+    /**
+     * Updates all animal icons on the board by redrawing all elements.
+     */
     public void updateAllAnimalIcons() {
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
@@ -127,11 +158,20 @@ public class GamePanelView {
         mainPanel.repaint();
     }
 
+    /**
+     * Clears the icons from the possible positions on the board to replace by actual icons for game start.
+     */
     private void clearGenIcons() {
         for (int[] pos : board.getP1Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
         for (int[] pos : board.getP2Possible()) boardTiles[pos[0]][pos[1]].setIcon(null);
     }
 
+    /**
+     * Sets the player icons on the board based on the player's pieces.
+     * 
+     * @param player The player whose pieces are to be displayed.
+     * @param playerNumber The number of the player (1 or 2).
+     */
     private void setPlayerIcons(Player player, int playerNumber) {
         for (Piece piece : player.getPieces()) {
             int x = piece.getX();
@@ -140,6 +180,12 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Returns the appropriate icon for the given piece and player number.
+     * 
+     * @param piece The piece for which the icon is to be retrieved.
+     * @param playerNumber The number of the player (1 or 2).
+     */
     private ImageIcon getAnimalIcon(Piece piece, int playerNumber) {
         String className = piece.getClass().getSimpleName();
         switch (className) {
@@ -155,8 +201,18 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Returns the main panel containing the game board and player display.
+     * 
+     * @return The main JPanel for the game that contains all panels.
+     */
     public JPanel getMainPanel() { return mainPanel; }
 
+    /**
+     * Sets the controller for the game panel, allowing it to handle button clicks.
+     * 
+     * @param controller The GamePanelController instance that handles user interactions.
+     */
     public void setController(GamePanelController controller) {
         for (JButton[] row : boardTiles) {
             for (JButton button : row) {
@@ -165,12 +221,22 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Updates the player display with the current player's name.
+     * 
+     * @param text The text to display for the current player.
+     */
     public void updatePlayerDisplay(String text) {
         playerName.setText(text);
         mainPanel.revalidate();
         mainPanel.repaint();
     }
 
+    /**
+     * Highlights the valid moves for the given piece on the board.
+     * 
+     * @param piece The piece for which valid moves are to be highlighted.
+     */
     public void highlightValidMoves(Piece piece) {
         clearHighlights();
         for (int[] move : piece.getValidMoves(board)) {
@@ -179,6 +245,11 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Highlights the tile where the piece is currently located.
+     * 
+     * @param piece The piece whose current position is to be highlighted.
+     */
     public void clearHighlights() {
         for (JButton[] row : boardTiles) {
             for (JButton tile : row) {
@@ -187,6 +258,11 @@ public class GamePanelView {
         }
     }
 
+    /**
+     * Displays a popup message indicating the winner of the game.
+     * 
+     * @param winnerName The name of the winning player.
+     */
     public void showWinner(String winnerName) {
         // Show popup
         Component frame = null;

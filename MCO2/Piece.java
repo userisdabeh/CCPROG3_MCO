@@ -1,9 +1,17 @@
 import java.util.ArrayList;
 
 /**
- * Represents an abstract game piece in the Jungle King game.
- * Each piece has a name, strength, position, and an associated player.
- * Specific game pieces extend this class and implement movement logic.
+ * Represents an abstract game piece in the Jungle King game. Key characteristics:
+ * <ul>
+ *   <li>Maintains position (x,y) on a 9x7 game board</li>
+ *   <li>Has strength value governing capture mechanics</li>
+ *   <li>Belongs to a {@link Player} through ownership association</li>
+ *   <li>Supports trap mechanics modifying effective strength</li>
+ *   <li>Provides base movement/capture logic for concrete pieces to extend</li>
+ * </ul>
+ * 
+ * <p>Concrete implementations must define specific movement patterns through
+ * {@link #getValidMoves(Board)} and may override {@link #move(int, int, Board)}.</p>
  */
 public abstract class Piece {
     protected String name;
@@ -14,12 +22,12 @@ public abstract class Piece {
     protected int defaultStrength;
 
     /**
-     * Constructs a Piece with a given name, strength, and initial position.
+     * Constructs a game piece with initial position and strength values
      * 
-     * @param name The name of the piece.
-     * @param strength The strength level of the piece (used for capturing logic).
-     * @param x The initial row position of the piece on the board.
-     * @param y The initial column position of the piece on the board.
+     * @param name      Display name of the piece
+     * @param strength  Base capture strength (unmodified by terrain)
+     * @param x         Initial row position (0-8)
+     * @param y         Initial column position (0-6)
      */
     public Piece(String name, int strength, int x, int y) {
         this.name = name;
@@ -29,19 +37,33 @@ public abstract class Piece {
         this.y = y;
     }
 
+    /**
+     * Generates all valid movement coordinates for this piece
+     * 
+     * @param board Current game board state
+     * @return List of valid [x,y] coordinates this piece can move to
+     */
     public abstract ArrayList<int[]> getValidMoves(Board board);
 
+    /**
+     * Validates board coordinates are within game boundaries
+     * 
+     * @param x     Row coordinate to check
+     * @param y     Column coordinate to check
+     * @param board Game board reference
+     * @return true if (x,y) is within 0-8 rows and 0-6 columns
+     */
     protected boolean isValidPosition(int x, int y, Board board) {
         return x >= 0 && x < 9 && y >= 0 && y < 7;
     }
 
     /**
-     * Abstract method to be implemented by subclasses defining how a piece moves.
+     * Base movement implementation. Subclasses should override for specialized behavior
      * 
-     * @param newX The target row position.
-     * @param newY The target column position.
-     * @param board The game board where the piece moves.
-     * @return True if the move is valid and executed, false otherwise.
+     * @param newX  Target row coordinate
+     * @param newY  Target column coordinate
+     * @param board Current game board
+     * @return true if position update succeeded, false otherwise
      */
     public boolean move(int newX, int newY, Board board) {
         if (isValidPosition(newX, newY, board)) {
@@ -52,6 +74,20 @@ public abstract class Piece {
         return false;
     }
 
+    /**
+     * Handles standard orthogonal movement validation:
+     * <ol>
+     *   <li>Single-square movement check</li>
+     *   <li>Board boundary validation</li>
+     *   <li>Own base restriction</li>
+     *   <li>Capture validation via {@link #canCapture(Piece, Board)}</li>
+     * </ol>
+     * 
+     * @param newX  Target row coordinate
+     * @param newY  Target column coordinate
+     * @param board Current game board
+     * @return true if basic move is valid and executed
+     */
     protected boolean basicMove(int newX, int newY, Board board) {
         // Validate 1-step movement
         if (Math.abs(newX - x) + Math.abs(newY - y) != 1) return false;
@@ -73,6 +109,15 @@ public abstract class Piece {
         return true;
     }
 
+    /**
+     * Manages lake jumping mechanics for predators (Lion/Tiger)
+     * 
+     * @param dx     X-direction movement delta
+     * @param dy     Y-direction movement delta
+     * @param board  Current game board
+     * @return true if jump was successfully executed
+     * @see #isLakeEdge(int, int)
+     */
     protected boolean handleLakeJump(int dx, int dy, Board board) {
         int directionX = Integer.signum(dx);
         int directionY = Integer.signum(dy);
@@ -118,11 +163,17 @@ public abstract class Piece {
     }
 
     /**
-     * Checks if the Lion or Tiger is at the edge of a lake, enabling a possible lake jump.
-     *
-     * @param x The row position of the Lion/Tiger.
-     * @param y The column position of the Lion/Tiger.
-     * @return true if the Lion/Tiger is at the edge of a lake, false otherwise.
+     * Identifies if position is at a lake jump point. Valid edges:
+     * <ul>
+     *   <li>North edges: Row 2, Columns 1-2 and 4-5</li>
+     *   <li>South edges: Row 6, Columns 1-2 and 4-5</li>
+     *   <li>West edges: Columns 0/3, Rows 3-5</li>
+     *   <li>East edges: Columns 3/6, Rows 3-5</li>
+     * </ul>
+     * 
+     * @param x  Row position to check
+     * @param y  Column position to check
+     * @return true if position is a valid lake jump edge
      */
     public boolean isLakeEdge(int x, int y) {
         boolean northEdge = (x == 2) && ((y >= 1 && y <= 2) || (y >= 4 && y <= 5)); // North edges (row 2) of both lakes
@@ -133,6 +184,12 @@ public abstract class Piece {
         return northEdge || southEdge || westEdge || eastEdge;
     }
 
+    /**
+     * Generates orthogonal movement candidates (N/S/E/W)
+     * 
+     * @param board Current game board
+     * @return List of adjacent [x,y] coordinates
+     */
     protected ArrayList<int[]> generateValidMoves(Board board) {
         ArrayList<int[]> moves = new ArrayList<>();
         int[][] directions = {{-1,0}, {1,0}, {0,-1}, {0,1}};
@@ -148,11 +205,16 @@ public abstract class Piece {
     }
 
     /**
-     * Determines if this piece can capture another piece.
-     * A piece can capture another if it is not on the same team and has equal or greater strength.
+     * Determines capture eligibility considering:
+     * <ul>
+     *   <li>Opponent ownership</li>
+     *   <li>Current strength comparison</li>
+     *   <li>Trap status modifications</li>
+     * </ul>
      * 
-     * @param target The piece to capture.
-     * @return True if this piece can capture the target, false otherwise.
+     * @param target  Piece to potentially capture
+     * @param board   Game board reference
+     * @return true if capture is permitted by game rules
      */
     protected boolean canCapture(Piece target, Board board) {
         return target != null && !isSamePlayer(target) && this.strength >= target.strength;

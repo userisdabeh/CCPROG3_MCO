@@ -1,8 +1,13 @@
 import java.util.*;
 
 /**
- * JungleKing class is the main class that runs the Jungle King game.
- * It initializes the game, sets up the board1, and starts the game loop.
+ * Controls core game logic and player turns.
+ * Handles player piece creation and placement.
+ * Manages game state and player turns.
+ * Handles player selection and starting positions.
+ * Determines the first player based on piece strength.
+ * Checks for winning moves and opponent defeat.
+ * 
  */
 public class JungleKing {
     private Board board1;
@@ -11,16 +16,16 @@ public class JungleKing {
     private Player currentPlayer;
     private boolean gameOver;
 
-    private Scanner scanner;
-
     // First player selection state
     public int selectingPlayer = 1; // 1 for Player 1, 2 for Player 2
     private int[] player1Selection;
     private int[] player2Selection;
 
     /**
-     * Constructor for the JungleKing class.
-     * Initializes the game, sets up the board1, and starts the game loop.
+     * Constructs a JungleKing game with the given board.
+     * Initializes players and sets up the game board.
+     * 
+     * @param board The game board used for the game.
      */
     public JungleKing(Board board) {
         board1 = board;  // Now initializes possible positions internally
@@ -31,7 +36,7 @@ public class JungleKing {
     }
 
     /**
-     * Creates the players for the game.
+     * Creates player instances with pieces positioned according to defined possible locations.
      */
     public void createPlayers() {
         player1 = new Player("Player 1", createPieces(board1.getP1Possible()));
@@ -39,11 +44,11 @@ public class JungleKing {
     }
 
     /**
-     * Creates the pieces for the players.
-     * Each piece is assigned a random position from the list of possible positions.
-     *
-     * @param positions The list of possible positions for the pieces.
-     * @return An ArrayList of pieces with random positions.
+     * Creates pieces for the players based on the provided positions.
+     * The pieces are created in a fixed order but assigned to random positions.
+     * 
+     * @param positions Ordered list of [row, col] positions for the pieces.
+     * @return Complete set of pieces for the player.
      */
     public ArrayList<Piece> createPieces(ArrayList<int[]> positions) {
         ArrayList<Piece> pieces = new ArrayList<>();
@@ -61,6 +66,13 @@ public class JungleKing {
         return pieces;
     }
 
+    /**
+     * Handles player position during the first-player determination phase.
+     * 
+     * @param row Selected row (x-coordinate) on the board.
+     * @param col Selected column (y-coordinate) on the board.
+     * @return true when both players have made valid selections and turn order is set, false if still selecting.
+     */
     public boolean handleStartingPosition(int row, int col) {
         if (selectingPlayer == 1) {
             if (isValidSelection(row, col, board1.getP1Possible())) {
@@ -83,6 +95,14 @@ public class JungleKing {
         return false;
     }
 
+    /**
+     * Validates if a coordinate selection exists in the provided list of positions.
+     * 
+     * @param row The row (x-coordinate) of the selected position.
+     * @param col The column (y-coordinate) of the selected position.
+     * @param positions The list of valid [row, col] positions.
+     * @return true if the (row, col) selection is valid, false otherwise.
+     */
     private boolean isValidSelection(int row, int col, ArrayList<int[]> positions) {
         for (int[] pos : positions) {
             if (pos[0] == row && pos[1] == col) return true;
@@ -90,14 +110,26 @@ public class JungleKing {
         return false;
     }
 
-    public Player getCurrentPlayer() {
-        return currentPlayer;
-    }
+    /**
+     * Returns the current player.
+     * 
+     * @return The current player.
+     */
+    public Player getCurrentPlayer() { return currentPlayer; }
 
-    public Board getBoard() {
-        return board1;
-    }
+    /**
+     * Returns the board being used in the game.
+     * 
+     * @return The game board.
+     */
+    public Board getBoard() { return board1; }
 
+    /**
+     * Determines the first player based on the strength of the selected pieces.
+     * The player with the stronger piece goes first.
+     * If both pieces are equal, Player 1 goes first.
+     * Updates the currentPlayer accordingly.
+     */
     private void determineFirstPlayer() {
         int p1Strength = getPieceStrength(player1, player1Selection);
         int p2Strength = getPieceStrength(player2, player2Selection);
@@ -105,6 +137,13 @@ public class JungleKing {
         currentPlayer = (p1Strength >= p2Strength) ? player1 : player2;
     }
 
+    /**
+     * Gets the strength of the piece at the given position for the specified player.
+     * 
+     * @param player The player whose piece strength is to be checked.
+     * @param position The position [row, col] of the piece.
+     * @return The strength of the piece at the given position.
+     */
     private int getPieceStrength(Player player, int[] position) {
         for (Piece piece : player.getPieces()) {
             if (piece.getX() == position[0] && piece.getY() == position[1]) {
@@ -115,9 +154,10 @@ public class JungleKing {
     }
 
     /**
-     * Places the players' pieces on the board1.
-     *
-     * @param player The player whose pieces are to be placed on the board1.
+     * Places pieces on the board for the specified player.
+     * Establishes the player owner for each piece.
+     * 
+     * @param player The player whose pieces are to be placed on the board.
      */
     private void placePiecesOnBoard(Player player) {
         for (Piece piece : player.getPieces()) {
@@ -126,6 +166,14 @@ public class JungleKing {
         }
     }
 
+    /**
+     * Checks if a move to a specified position is to capture the opponent's home base.
+     * 
+     * @param x The target x-coordinate of the move.
+     * @param y The target y-coordinate of the move.
+     * @param currentPlayer The player making the move.
+     * @return true if the move captures the opponent's home base, false otherwise.
+     */
     public boolean isWinningMove(int x, int y, Player currentPlayer) {
         // Get opponent's base position from HomeBase
         Player opponent = (currentPlayer == player1) ? player2 : player1;
@@ -134,11 +182,22 @@ public class JungleKing {
         return x == opponentBase[0] && y == opponentBase[1];
     }
 
+    /**
+     * Checks if opponent has any remaining pieces on the board.
+     * 
+     * @param currentPlayer The player making the move.
+     * @return true if the opponent is defeated (no pieces left), false otherwise.
+     */
     public boolean checkOpponentDefeated(Player currentPlayer) {
         Player opponent = (currentPlayer == player1) ? player2 : player1;
         return opponent.getPieces().isEmpty();
     }
 
+    /**
+     * Updates the game state to indicate if the game is over.
+     * 
+     * @return true if the game is over, false otherwise.
+     */
     public void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
     }
@@ -154,19 +213,32 @@ public class JungleKing {
         }
     }
 
-    public Player getPlayer1() {
-        return player1;
-    }
+    /**
+     * Returns the Player 1 object.
+     * 
+     * @return Player 1 instance
+     */
+    public Player getPlayer1() { return player1; }
 
-    public Player getPlayer2() {
-        return player2;
-    }
+    /**
+     * Returns the Player 2 object
+     * 
+     * @return Player 2 instance
+     */
+    public Player getPlayer2() { return player2; }
 
-    public String getCurrentPlayerName() {
-        return currentPlayer.getName();
-    }
+    /**
+     * Returns the current player name.
+     * 
+     * @return The name of the current player.
+     */
 
-    public int getSelectingPlayer() {
-        return selectingPlayer;
-    }
+    public String getCurrentPlayerName() { return currentPlayer.getName(); }
+
+    /**
+     * Returns the Selecting Player Number.
+     * 
+     * @return The selecting player (1 or 2).
+     */
+    public int getSelectingPlayer() { return selectingPlayer; }
 }

@@ -1,6 +1,11 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
+/**
+ * Main view class for the Jungle King game.
+ * This class sets up the initial menu screen and handles the transition to the game panel.
+ * Connects to the {@link JungleKingController} to handle button actions.
+ */
 public class JungleKingView {
     private JFrame frame = new JFrame("Jungle King Game");
     private JPanel menuPanel = new JPanel();
@@ -9,11 +14,20 @@ public class JungleKingView {
     private Font font = new Font("Helvetica", Font.BOLD, 30);
     private final JungleKing jungleKing;
 
+    /**
+     * Contructs the game view and initialized UI components.
+     * 
+     * @param jungleKing The JungleKing instance that manages the game logic.
+     */
     public JungleKingView(JungleKing jungleKing) {
         this.jungleKing = jungleKing;
         initializeFrame();
     }
 
+    /**
+     * Initializes the main frame and sets up the menu panel with components.
+     * 
+     */
     private void initializeFrame() {
         frame.setSize(400, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -40,6 +54,11 @@ public class JungleKingView {
         frame.setVisible(true);
     }
 
+    /**
+     * Transition from the first player determination screen to the game panel.
+     * Creates and displays game panel components through the {@link GamePanelView} class.
+     * Initializes the game panel controller to handle game logic and user interactions.
+     */
     public void startGame() {
         frame.getContentPane().removeAll();
         GamePanelView gamePanel = new GamePanelView(jungleKing);
@@ -50,7 +69,18 @@ public class JungleKingView {
         frame.repaint();
     }
 
+    /**
+     * Returns the landing button used to start the game.
+     * 
+     * @return The landing button used to start the game.
+     */
     public JButton getLandingButton() { return landingButton; }
+    
+    /**
+     * Sets the controller used to handle button actions.
+     * 
+     * @param controller The controller instance that handles button actions.
+     */
     public void setController(JungleKingController controller) {
         landingButton.addActionListener(controller);
     }

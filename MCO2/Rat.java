@@ -4,6 +4,9 @@ import java.util.ArrayList;
  * Represents the Rat piece in the Jungle King game.
  * The Rat has a strength of 1 and is the only piece that can enter water.
  * It can also capture the Elephant under specific conditions.
+ * Extends the {@link Piece} class.
+ * The Rat can move to any adjacent square, including diagonally.
+ * The Rat has special capture rules when in water.
  */
 public class Rat extends Piece {
 
@@ -17,20 +20,24 @@ public class Rat extends Piece {
         super("Rat", 1, x, y);
     }
 
+    /**
+     * Generates a list of valid moves for the rat piece.
+     * 
+     * @param board The game board.
+     * @return A list of valid moves for the rat piece.
+     */
     @Override
     public ArrayList<int[]> getValidMoves(Board board) {
         return generateValidMoves(board);
     }
 
     /**
-     * Attempts to move the Rat to a new position.
-     * The Rat moves one step in any cardinal direction (up, down, left, or right).
-     * It can enter water and has special capture rules.
+     * Attempts to move the rat to the new position.
      *
-     * @param newX The target row position.
-     * @param newY The target column position.
+     * @param newX The new row position of the rat.
+     * @param newY The new column position of the rat.
      * @param board The game board.
-     * @return True if the move is valid and executed, false otherwise.
+     * @return {@code true} if the move is successful, {@code false} if the move is invalid.
      */
     @Override
     public boolean move(int newX, int newY, Board board) {
@@ -41,6 +48,15 @@ public class Rat extends Piece {
         return basicMove(newX, newY, board);
     }
 
+    /**
+     * Handles the rat's movement in water.
+     * The rat can only move to adjacent water squares and can capture other pieces in water.
+     * 
+     * @param newX The new row position of the rat.
+     * @param newY The new column position of the rat.
+     * @param board The game board.
+     * @return {@code true} if the move is successful, {@code false} if the move is invalid.
+     */
     private boolean handleWaterMove(int newX, int newY, Board board) {
         // Validate water-specific movement
         if (!board.isLake(newX, newY)) return false;
@@ -73,6 +89,11 @@ public class Rat extends Piece {
         return true;
     }
 
+    /**
+     * Checks if the rat can capture the target piece.
+     * The rat can capture the Elephant on land, but not in water.
+     * The rat can capture an opponent rat if they are both in water.
+     */
     @Override
     protected boolean canCapture(Piece target, Board board) {
         // Special case: Rat can capture Elephant on land
